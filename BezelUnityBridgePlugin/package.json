@@ -1,0 +1,24 @@
+{
+  "name": "com.bezel.unity",
+  "displayName": "Bezel Unity Bridge",
+  "description": "Tool to build Bezel documents and assets as native Unity project",
+  "author": {
+    "name": "Bezel",
+    "url": "https://www.bezel.it/"
+  },
+  "keywords": [
+    "unity",
+    "bezel", 
+    "bezel3D"
+  ],
+  "license": "MIT",
+  "unity": "2021.3",
+  "unityRelease": "17f1",
+  "version": "0.0.1",
+  "type": "library",
+  "hideInEditor": false,
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "2.0.1-preview.1",
+    "com.unity.textmeshpro": "2.0.1"
+  }
+}
