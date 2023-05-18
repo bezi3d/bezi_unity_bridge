@@ -10,7 +10,8 @@ public class BezelEditorSettings
 
     static string defineSymbols = "ANOTHER_IMPORTER_HAS_HIGHER_PRIORITY";
 
-    static BezelEditorSettings() {
+    static BezelEditorSettings()
+    {
 
         AddBezelDefineSymbols();
     }
@@ -21,8 +22,8 @@ public class BezelEditorSettings
 
         // Critical: Only add once, and not to affect existing project define symbols
         if (!defines.Contains(defineSymbols))
-        { 
-            defines += ";"+defineSymbols;
+        {
+            defines += ";" + defineSymbols;
 
             // Set the updated define symbols for the active build target group
             PlayerSettings.SetScriptingDefineSymbols(target, defines);

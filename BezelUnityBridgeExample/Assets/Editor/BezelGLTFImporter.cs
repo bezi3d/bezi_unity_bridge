@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor.AssetImporters;
 using Siccity.GLTFUtility;
 
-namespace Bezel.Bridge
+namespace Bezel.Bridge.Editor
 {
 #if ANOTHER_IMPORTER_HAS_HIGHER_PRIORITY
     [ScriptedImporter(1, "gltf")]
