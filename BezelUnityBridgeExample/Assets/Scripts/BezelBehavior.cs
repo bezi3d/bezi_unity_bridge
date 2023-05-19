@@ -47,7 +47,7 @@ namespace Bezel.Bridge
 
             // Todo: Configure following rotations from bezel state and interactions
             //Prepare Base State
-            PrepareBaseState();
+            //PrepareBaseState();
 
             // This can only be set after import, e.g. Start().
             // Unless targetObjectTransform is ready first.
