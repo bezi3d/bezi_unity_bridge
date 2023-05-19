@@ -54,7 +54,6 @@ namespace Bezel.Bridge
             // For now, targetObjectTransform reference is inserted during import.
             // Todo: Configure following rotations once implement proper states in unity
             initialRotation = targetObjectTransform.rotation;
-            targetRotation = Quaternion.Euler(-86.0f, 0.0f, 0.0f);
 
             triggered = false;
         }

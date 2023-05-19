@@ -81,6 +81,11 @@ namespace Bezel.Bridge
                     nodeObjects[objectID].AddComponent<BezelBehavior>();
 nodeObjects[objectID].GetComponent<BezelBehavior>().AttachBezelBehavior(bezelobject.Value.states, bezelobject.Value.interactions);
 
+                    foreach (var _s in bezelobject.Value.states)
+                    {
+                        nodeObjects[objectID].GetComponent<BezelBehavior>().targetRotation = Quaternion.Euler(_s.Value.rotation[0], _s.Value.rotation[1], _s.Value.rotation[2]);
+                    }
+
                     foreach (var bezelinteraction in bezelobject.Value.interactions)
                     {
                         int targetEntityIds;
