@@ -20,8 +20,7 @@ namespace Bezel.Bridge
         {
             if(!DecodeBezelGLTFExtras(objectItem)) return;
 
-            int nodeID = 0;
-            TraverseObjectHierarchy(gameObject.GetComponent<Transform>(), ref nodeID);
+            if (!StoreImportedObjectTransform(gameObject)) return;
 
             AttachBezelBehavior();
         }
@@ -36,6 +35,14 @@ namespace Bezel.Bridge
                 return false;
             }
 
+            return true;
+        }
+
+        private static bool StoreImportedObjectTransform(GameObject gameObject) {
+
+            int nodeID = 0;
+            nodeObjects.Clear();
+            TraverseObjectHierarchy(gameObject.GetComponent<Transform>(), ref nodeID);
             return true;
         }
 
