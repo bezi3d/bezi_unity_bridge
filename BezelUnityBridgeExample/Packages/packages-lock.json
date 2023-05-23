@@ -6,7 +6,8 @@
       "source": "local",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "2.0.1-preview.1",
-        "com.unity.textmeshpro": "2.0.1"
+        "com.unity.textmeshpro": "2.0.1",
+        "com.siccity.gltfutility": "0.7.2"
       }
     },
     "com.siccity.gltfutility": {
