@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 namespace Bezel.Bridge
 {
     [System.Serializable]
-    public class RootObject
+    public class BezelObjects
     {
-        public Dictionary<string, BezelObject> bezel_objects;
+        public List<BezelObject> bezel_objects;
     }
 
     [System.Serializable]
@@ -18,17 +18,16 @@ namespace Bezel.Bridge
         public Dictionary<string, Interaction> interactions;
     }
 
+    // Bezel SceneObjectStatefulDataSchema
     [System.Serializable]
     public class State
     {
         public List<float> rotation;
-        public string parameters;
         public string name;
 
-        public State(List<float> rotation, string parameters, string name)
+        public State(List<float> rotation, string name)
         {
             this.rotation = rotation;
-            this.parameters = parameters;
             this.name = name;
         }
     }
@@ -45,7 +44,7 @@ namespace Bezel.Bridge
     {
         public string type;
         public string @event;
-        public string targetEntityIds;
+        public List<string> targetEntityIds; 
     }
 
     [System.Serializable]

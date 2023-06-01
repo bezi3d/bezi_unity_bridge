@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -9,7 +10,7 @@ namespace Bezel.Bridge
 {
     public static class BezelGLTFConstructor
     {
-        private static RootObject rootObject;
+        private static BezelObjects rootObject;
         private static List<Transform> nodeObjects = new List<Transform>();
 
         // 1. Decode bezel extras into Unity C# format for later access.
@@ -28,7 +29,16 @@ namespace Bezel.Bridge
         // Convert object to json format and validate the extras are bezel format json string. 
         private static bool DecodeBezelGLTFExtras(object objectItem)
         {
-            rootObject = JsonConvert.DeserializeObject<RootObject> (objectItem.ToString());
+            try
+            {
+                rootObject = JsonConvert.DeserializeObject<BezelObjects>(objectItem.ToString());
+            }
+            catch(Exception e) {
+                Debug.LogError("Fail to decode Bezel behavior json, likely schema mismatch from BezelSceneGraph.cs");
+                Debug.LogError("An error occurred: " + e.Message);
+
+                return false;
+            }
 
             if (rootObject == null || rootObject.bezel_objects == null || rootObject.bezel_objects.Count == 0) {
                 Debug.Log("No valid bezel extras");
@@ -71,27 +81,29 @@ namespace Bezel.Bridge
             if (rootObject == null) return;
             if (nodeObjects == null) return;
 
-            foreach (var bezelobject in rootObject.bezel_objects) {
+            foreach (var bezelobject in rootObject.bezel_objects)
+            {
                 int objectID;
-                if (int.TryParse(bezelobject.Value.id, out objectID))
+                if (int.TryParse(bezelobject.id, out objectID))
                 {
                     Debug.Log("Attach Bezel Behavior for objectID: " + objectID);
-  
+
                     // Todo: Clean up to standarize assignment
                     nodeObjects[objectID].AddComponent<BezelBehavior>();
-nodeObjects[objectID].GetComponent<BezelBehavior>().AttachBezelBehavior(bezelobject.Value.states, bezelobject.Value.interactions);
+                    nodeObjects[objectID].GetComponent<BezelBehavior>().AttachBezelBehavior(bezelobject.states, bezelobject.interactions);
 
-                    foreach (var _s in bezelobject.Value.states)
+                    foreach (var _s in bezelobject.states)
                     {
                         nodeObjects[objectID].GetComponent<BezelBehavior>().targetRotation = Quaternion.Euler(_s.Value.rotation[0], _s.Value.rotation[1], _s.Value.rotation[2]);
                     }
 
-                    foreach (var bezelinteraction in bezelobject.Value.interactions)
+                    foreach (var bezelinteraction in bezelobject.interactions)
                     {
                         int targetEntityIds;
-                        if (int.TryParse(bezelinteraction.Value.trigger.targetEntityIds, out targetEntityIds))
+                        if (int.TryParse(bezelinteraction.Value.trigger.targetEntityIds[0], out targetEntityIds))
                         {
-                            nodeObjects[objectID].GetComponent<BezelBehavior>().targetObjectTransform = nodeObjects[targetEntityIds];
+                            // Todo: Rewrite to accommodate multiple targets later.
+                            nodeObjects[objectID].GetComponent<BezelBehavior>().targetObjectTransform[0] = nodeObjects[targetEntityIds];
                             Debug.Log(" Insert target transform as reference..." + nodeObjects[targetEntityIds].name);
                         }
                         else
