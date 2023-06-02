@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Bezel.Bridge
 {
@@ -13,7 +14,11 @@ namespace Bezel.Bridge
     [System.Serializable]
     public class BezelObject
     {
+        public int gltf_id;
         public string id;
+        public string type;
+        public string name;
+        public Transform transform;
         public Dictionary<string, State> states;
         public Dictionary<string, Interaction> interactions;
     }
@@ -44,7 +49,8 @@ namespace Bezel.Bridge
     {
         public string type;
         public string @event;
-        public List<string> targetEntityIds; 
+        public List<string> targetEntityIds;
+        public List<int> targetEntity_gltf_Ids = new List<int>();
     }
 
     [System.Serializable]

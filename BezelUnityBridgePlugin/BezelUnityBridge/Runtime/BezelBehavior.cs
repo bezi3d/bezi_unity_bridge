@@ -9,6 +9,16 @@ namespace Bezel.Bridge
 {
     public class BezelBehavior : MonoBehaviour
     {
+        public int glTF_id;
+        public string id;
+        public string type;
+        public string name;
+        // Todo: Implement a proper set/get
+        public Dictionary<string, State> states;
+        public Dictionary<string, Interaction> interactions;
+
+        public bool ContainsStates = false;
+        public bool ContainsInteractions = false;
 
         // Todo: Configure this from bezel state and interactions
         public bool toggle = true;
@@ -16,13 +26,8 @@ namespace Bezel.Bridge
         public bool triggered = false;
 
         // Todo: Implement a proper set/get. This will require heavy rewrite to scale to transform array. Trigger multiple objects, each with different action...
-        //[SerializeField]
+        [SerializeField]
         public Transform[] targetObjectTransform = new Transform[1];
-
-        // Todo: Implement a proper set/get
-        public Dictionary<string, State> states;
-        public Dictionary<string, Interaction> interactions;
-
 
         public Quaternion initialRotation;
         public Quaternion targetRotation;
@@ -30,8 +35,12 @@ namespace Bezel.Bridge
 
         // Constructor
         public void AttachBezelBehavior(Dictionary<string, State> _states, Dictionary<string, Interaction> _interactions) {
+
             states = _states;
             interactions = _interactions;
+
+            ContainsStates = true;
+            ContainsInteractions = true;
         }
 
         // Todo: Configure Animation event from bezel state and interactions
@@ -43,6 +52,11 @@ namespace Bezel.Bridge
         // Start is called before the first frame update
         void Start()
         {
+            if (!ContainsStates || !ContainsInteractions)
+            {
+                return;
+            }
+
             PrepareCollider();
 
             // Todo: Configure following rotations from bezel state and interactions
@@ -61,6 +75,10 @@ namespace Bezel.Bridge
         // Update is called once per frame
         void Update()
         {
+            if (!ContainsStates || !ContainsInteractions) {
+                return;
+            }
+
             if (triggered) {
                 triggered = false;
 
