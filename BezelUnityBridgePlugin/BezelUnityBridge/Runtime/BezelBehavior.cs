@@ -9,10 +9,6 @@ namespace Bezel.Bridge
 {
     public class BezelBehavior : MonoBehaviour
     {
-        public int glTF_id;
-        public string id;
-        public string type;
-        public string name;
         // Todo: Implement a proper set/get
         public Dictionary<string, State> states;
         public Dictionary<string, Interaction> interactions;

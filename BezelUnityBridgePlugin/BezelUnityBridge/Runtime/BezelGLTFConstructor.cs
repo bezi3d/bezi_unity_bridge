@@ -99,20 +99,7 @@ namespace Bezel.Bridge
                 bezelobject.gltf_id = id;
                 bezelobject.transform = nodeObjects[bezelobject.gltf_id];
                 bezelIdsLookup.Add(bezelobject.id, bezelobject.gltf_id);
-
                 id++;
-                // Todo: Clean up to standarize assignment
-                nodeObjects[bezelobject.gltf_id].AddComponent<BezelBehavior>();
-                nodeObjects[bezelobject.gltf_id].GetComponent<BezelBehavior>().glTF_id = bezelobject.gltf_id;
-                nodeObjects[bezelobject.gltf_id].GetComponent<BezelBehavior>().id = bezelobject.id;
-                if (bezelobject.type != null)
-                {
-                    nodeObjects[bezelobject.gltf_id].GetComponent<BezelBehavior>().type = bezelobject.type;
-                }
-                if (bezelobject.name != null)
-                {
-                    nodeObjects[bezelobject.gltf_id].GetComponent<BezelBehavior>().name = bezelobject.name;
-                }
             }
         }
 
@@ -124,18 +111,20 @@ namespace Bezel.Bridge
 
             foreach (var bezelobject in bezelRoot.rootObject.bezel_objects)
             {
-
+                Transform nodeObject = nodeObjects[bezelobject.gltf_id];
                 // Todo: Clean up to standarize assignment
                 if (bezelobject.states.Count == 0 && bezelobject.interactions.Count == 0) {
                     continue;
                 }
                 else {
-                    nodeObjects[bezelobject.gltf_id].GetComponent<BezelBehavior>().AttachBezelBehavior(bezelobject.states, bezelobject.interactions);
+                    // Todo: Clean up to standarize assignment
+                    nodeObject.AddComponent<BezelBehavior>();
+                    nodeObject.GetComponent<BezelBehavior>().AttachBezelBehavior(bezelobject.states, bezelobject.interactions);
                 }
 
                 foreach (var _s in bezelobject.states)
                 {
-                    nodeObjects[bezelobject.gltf_id].GetComponent<BezelBehavior>().targetRotation = Quaternion.Euler(_s.Value.rotation[0] * Mathf.Rad2Deg, _s.Value.rotation[1] * Mathf.Rad2Deg, _s.Value.rotation[2] * Mathf.Rad2Deg);
+                    nodeObject.GetComponent<BezelBehavior>().targetRotation = Quaternion.Euler(_s.Value.rotation[0] * Mathf.Rad2Deg, _s.Value.rotation[1] * Mathf.Rad2Deg, _s.Value.rotation[2] * Mathf.Rad2Deg);
                 }
 
                 foreach (var bezelinteraction in bezelobject.interactions)
@@ -143,13 +132,15 @@ namespace Bezel.Bridge
 
                     if (bezelinteraction.Value.trigger != null) {
 
-                        foreach (var id in bezelinteraction.Value.trigger.targetEntityIds) {
+                        foreach (var targetEntityId in bezelinteraction.Value.trigger.targetEntityIds) {
 
-                            bezelinteraction.Value.trigger.targetEntity_gltf_Ids.Add(bezelIdsLookup[id]);
+                            // Add the gltf id as part of the trigger event for future reference.
+                            int _targetEntity_gltf_Id = bezelIdsLookup[targetEntityId];
+                            bezelinteraction.Value.trigger.targetEntity_gltf_Ids.Add(_targetEntity_gltf_Id);
 
                             // Insert target frame reference into the trigger frame
                             // Todo: targetObjectTransform[0] is a hack before fully implementing the interaction
-                            nodeObjects[bezelobject.gltf_id].GetComponent<BezelBehavior>().targetObjectTransform[0] = nodeObjects[bezelIdsLookup[id]];
+                            nodeObject.GetComponent<BezelBehavior>().targetObjectTransform[0] = nodeObjects[_targetEntity_gltf_Id];
                         }
                     }
                 }
