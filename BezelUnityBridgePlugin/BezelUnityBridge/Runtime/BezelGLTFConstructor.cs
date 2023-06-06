@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Unity.VisualScripting;
+//using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -118,13 +118,13 @@ namespace Bezel.Bridge
                 }
                 else {
                     // Todo: Clean up to standarize assignment
-                    nodeObject.AddComponent<BezelBehavior>();
-                    nodeObject.GetComponent<BezelBehavior>().AttachBezelBehavior(bezelobject.states, bezelobject.interactions);
+                    nodeObject.gameObject.AddComponent<BezelBehavior>();
+                    nodeObject.gameObject.GetComponent<BezelBehavior>().AttachBezelBehavior(bezelobject.states, bezelobject.interactions);
                 }
 
                 foreach (var _s in bezelobject.states)
                 {
-                    nodeObject.GetComponent<BezelBehavior>().targetRotation = Quaternion.Euler(_s.Value.rotation[0] * Mathf.Rad2Deg, _s.Value.rotation[1] * Mathf.Rad2Deg, _s.Value.rotation[2] * Mathf.Rad2Deg);
+                    nodeObject.gameObject.GetComponent<BezelBehavior>().targetRotation = Quaternion.Euler(_s.Value.rotation[0] * Mathf.Rad2Deg, _s.Value.rotation[1] * Mathf.Rad2Deg, _s.Value.rotation[2] * Mathf.Rad2Deg);
                 }
 
                 foreach (var bezelinteraction in bezelobject.interactions)
@@ -140,7 +140,7 @@ namespace Bezel.Bridge
 
                             // Insert target frame reference into the trigger frame
                             // Todo: targetObjectTransform[0] is a hack before fully implementing the interaction
-                            nodeObject.GetComponent<BezelBehavior>().targetObjectTransform[0] = nodeObjects[_targetEntity_gltf_Id];
+                            nodeObject.gameObject.GetComponent<BezelBehavior>().targetObjectTransform[0] = nodeObjects[_targetEntity_gltf_Id];
                         }
                     }
                 }

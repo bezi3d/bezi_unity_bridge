@@ -19,8 +19,8 @@ namespace Bezel.Bridge
         public string type;
         public string name;
         public Transform transform;
-        public Dictionary<string, State> states;
-        public Dictionary<string, Interaction> interactions;
+        public UDictionary<string, State> states;
+        public UDictionary<string, Interaction> interactions;
     }
 
     // Bezel SceneObjectStatefulDataSchema
@@ -41,7 +41,7 @@ namespace Bezel.Bridge
     public class Interaction
     {
         public Trigger trigger;
-        public Dictionary<string, Animation> animations;
+        public UDictionary<string, Animation> animations;
     }
 
     [System.Serializable]

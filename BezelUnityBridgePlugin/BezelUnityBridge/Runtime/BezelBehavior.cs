@@ -10,8 +10,8 @@ namespace Bezel.Bridge
     public class BezelBehavior : MonoBehaviour
     {
         // Todo: Implement a proper set/get
-        public Dictionary<string, State> states;
-        public Dictionary<string, Interaction> interactions;
+        public UDictionary<string, State> states;
+        public UDictionary<string, Interaction> interactions;
 
         public bool ContainsStates = false;
         public bool ContainsInteractions = false;
@@ -30,7 +30,7 @@ namespace Bezel.Bridge
         public float duration = 0.5f;
 
         // Constructor
-        public void AttachBezelBehavior(Dictionary<string, State> _states, Dictionary<string, Interaction> _interactions) {
+        public void AttachBezelBehavior(UDictionary<string, State> _states, UDictionary<string, Interaction> _interactions) {
 
             states = _states;
             interactions = _interactions;
