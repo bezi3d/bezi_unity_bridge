@@ -126,9 +126,13 @@ public class UDictionary
             }
 
             if (IsExpanded)
+            {
                 DrawList(ref rect);
+            }
             else
+            {
                 DrawCompleteHeader(ref rect);
+            }
         }
 
         void DrawList(ref Rect rect)
@@ -183,7 +187,7 @@ public class UDictionary
             ReorderableList.defaultBehaviours.DrawHeaderBackground(rect);
 
             rect.x += 6;
-            rect.y += 0;
+            rect.y += 6;
 
             DrawHeader(rect);
         }
@@ -251,9 +255,16 @@ public class UDictionary
 
                 foreach (var child in IterateChildern(property))
                 {
-                    EditorGUI.PropertyField(rect, child, false);
-
-                    rect.y += SingleLineHeight + +2f;
+                    if (child.hasVisibleChildren == false)
+                    {
+                        EditorGUI.PropertyField(rect, child, false);
+                        rect.y += SingleLineHeight + +2f;
+                    }
+                    else
+                    {
+                        EditorGUI.PropertyField(rect, child, true);
+                        rect.y += SingleLineHeight + +2f;
+                    }
                 }
             }
         }

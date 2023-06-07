@@ -27,8 +27,9 @@ namespace Bezel.Bridge
     [System.Serializable]
     public class State
     {
-        public List<float> rotation;
         public string name;
+        public List<float> position;
+        public List<float> rotation;
 
         public State(List<float> rotation, string name)
         {
