@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 277853018}
   - component: {fileID: 277853017}
   - component: {fileID: 277853016}
+  - component: {fileID: 277853019}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -199,71 +200,29 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 277853015}
-  m_LocalRotation: {x: 0, y: 0.9914449, z: -0.13052616, w: 0}
-  m_LocalPosition: {x: -19.33, y: 3.99, z: 7.64}
+  m_LocalRotation: {x: 0.091406755, y: 0.8939119, z: -0.21295986, w: 0.38368538}
+  m_LocalPosition: {x: -4.49, y: 3.99, z: 7.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 15, y: 180, z: 0}
---- !u!1001 &386824184
-PrefabInstance:
+  m_LocalEulerAnglesHint: {x: 26.8, y: 133.54, z: 0}
+--- !u!114 &277853019
+MonoBehaviour:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -390075921982608337, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_Name
-      value: PokeBall_Interactions
-      objectReference: {fileID: 0}
-    - target: {fileID: 6859945204063372558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6859945204063372558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6859945204063372558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6859945204063372558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6859945204063372558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6859945204063372558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6859945204063372558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6859945204063372558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6859945204063372558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6859945204063372558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6859945204063372558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 9199261849990390558, guid: 6c1de01492fd94ee49b7f6e523b7a3f7, type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277853015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d95fca7c23654dc695a29b7c4dbdae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncKey: AppleVisionPro--f19bf4f5-5a86-4686-8136-9106815bdf89
+  download: 0
+  downloadPercentage: 
 --- !u!1001 &523799105
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -274,6 +233,10 @@ PrefabInstance:
     - target: {fileID: -390075921982608337, guid: 1c3c547cdb3104094bc9d20be4e5ae04, type: 3}
       propertyPath: m_Name
       value: Dev_glTF_interactions
+      objectReference: {fileID: 0}
+    - target: {fileID: -390075921982608337, guid: 1c3c547cdb3104094bc9d20be4e5ae04, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6859945204063372558, guid: 1c3c547cdb3104094bc9d20be4e5ae04, type: 3}
       propertyPath: m_RootOrder
