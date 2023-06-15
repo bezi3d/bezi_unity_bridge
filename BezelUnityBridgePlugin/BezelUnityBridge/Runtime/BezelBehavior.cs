@@ -9,29 +9,38 @@ namespace Bezel.Bridge
 {
     public class BezelBehavior : MonoBehaviour
     {
+        // Todo: Implement a proper set/get
+
+        [UDictionary.Split(20, 80)]
+        public UDictionary<string, State> states;
+        [UDictionary.Split(20, 90)]
+        public UDictionary<string, Interaction> interactions;
+
+        public bool ContainsStates = false;
+        public bool ContainsInteractions = false;
 
         // Todo: Configure this from bezel state and interactions
         public bool toggle = true;
 
         public bool triggered = false;
 
-        // Todo: Implement a proper set/get
-        //[SerializeField]
-        public Transform targetObjectTransform;
+        // Todo: Implement a proper set/get. This will require heavy rewrite to scale to transform array. Trigger multiple objects, each with different action...
+        [SerializeField]
+        public Transform[] targetObjectTransform = new Transform[1];
 
-        // Todo: Implement a proper set/get
-        public Dictionary<string, State> states;
-        public Dictionary<string, Interaction> interactions;
-
-
-        public Quaternion initialRotation;
+        private Quaternion initialRotation;
         public Quaternion targetRotation;
-        public float duration = 0.5f;
+
+        private float duration = 0.5f;
 
         // Constructor
-        public void AttachBezelBehavior(Dictionary<string, State> _states, Dictionary<string, Interaction> _interactions) {
+        public void AttachBezelBehavior(UDictionary<string, State> _states, UDictionary<string, Interaction> _interactions) {
+
             states = _states;
             interactions = _interactions;
+
+            ContainsStates = true;
+            ContainsInteractions = true;
         }
 
         // Todo: Configure Animation event from bezel state and interactions
@@ -43,7 +52,12 @@ namespace Bezel.Bridge
         // Start is called before the first frame update
         void Start()
         {
-            PrepareCollider();
+            if (!ContainsStates || !ContainsInteractions)
+            {
+                return;
+            }
+
+            //PrepareCollider();
 
             // Todo: Configure following rotations from bezel state and interactions
             //Prepare Base State
@@ -53,34 +67,18 @@ namespace Bezel.Bridge
             // Unless targetObjectTransform is ready first.
             // For now, targetObjectTransform reference is inserted during import.
             // Todo: Configure following rotations once implement proper states in unity
-            initialRotation = targetObjectTransform.rotation;
-
-            triggered = false;
+            initialRotation = targetObjectTransform[0].rotation;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (triggered) {
-                triggered = false;
-
-                if (targetObjectTransform)
-                {
-                    if (toggle)
-                    {
-                        StartCoroutine(TweenRotation(initialRotation, targetRotation));
-                        toggle = false;
-                    }
-                    else
-                    {
-                        StartCoroutine(TweenRotation(targetRotation, initialRotation));
-                        toggle = true;
-                    }
-                }
+            if (!ContainsStates || !ContainsInteractions) {
+                return;
             }
         }
 
-        // Preparation ==================================
+        // Todo: Prepare collider should be on the target object, not the object with states.
         // Todo: Match how bezel create collider
         private void PrepareCollider()
         {
@@ -110,19 +108,17 @@ namespace Bezel.Bridge
 
         private void PrepareBaseState() {
             List<float> _rotation = new List<float>();
-            _rotation.Add(targetObjectTransform.rotation.eulerAngles.x);
-            _rotation.Add(targetObjectTransform.rotation.eulerAngles.y);
-            _rotation.Add(targetObjectTransform.rotation.eulerAngles.z);
-
-            string _parameters = " ";
+            _rotation.Add(targetObjectTransform[0].rotation.eulerAngles.x);
+            _rotation.Add(targetObjectTransform[0].rotation.eulerAngles.y);
+            _rotation.Add(targetObjectTransform[0].rotation.eulerAngles.z);
 
             string _name = "Base State";
 
-            State _state = new State(_rotation, _parameters, _name);
+            State _state = new State(_rotation, _name);
 
             // Store as Bezel coordinate
             states.Add("0", _state);
-            
+
         }
 
         private IEnumerator TweenRotation(Quaternion fromRotation, Quaternion toRotation)
@@ -138,7 +134,7 @@ namespace Bezel.Bridge
                 Quaternion newRotation = Quaternion.Lerp(fromRotation, toRotation, normalizedTime);
 
                 // Update target object
-                targetObjectTransform.rotation = newRotation;
+                targetObjectTransform[0].rotation = newRotation;
                 // Increment the elapsed time
                 elapsedTime += Time.deltaTime;
 
@@ -146,7 +142,7 @@ namespace Bezel.Bridge
             }
 
             // Ensure the final position is set correctly
-            targetObjectTransform.rotation = toRotation;
+            targetObjectTransform[0].rotation = toRotation;
         }
     }
 }

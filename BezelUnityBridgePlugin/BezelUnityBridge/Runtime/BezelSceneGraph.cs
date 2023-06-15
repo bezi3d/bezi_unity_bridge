@@ -1,34 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Bezel.Bridge
 {
     [System.Serializable]
-    public class RootObject
+    public class BezelObjects
     {
-        public Dictionary<string, BezelObject> bezel_objects;
+        public List<BezelObject> bezel_objects;
     }
 
     [System.Serializable]
     public class BezelObject
     {
+        public int gltf_id;
         public string id;
-        public Dictionary<string, State> states;
-        public Dictionary<string, Interaction> interactions;
+        public string type;
+        public string name;
+        public Transform transform;
+        public UDictionary<string, State> states;
+        public UDictionary<string, Interaction> interactions;
     }
 
+    // Bezel SceneObjectStatefulDataSchema
     [System.Serializable]
     public class State
     {
-        public List<float> rotation;
-        public string parameters;
         public string name;
+        public List<float> position;
+        public List<float> rotation;
 
-        public State(List<float> rotation, string parameters, string name)
+        public State(List<float> rotation, string name)
         {
             this.rotation = rotation;
-            this.parameters = parameters;
             this.name = name;
         }
     }
@@ -37,7 +42,7 @@ namespace Bezel.Bridge
     public class Interaction
     {
         public Trigger trigger;
-        public Dictionary<string, Animation> animations;
+        public UDictionary<string, Animation> animations;
     }
 
     [System.Serializable]
@@ -45,7 +50,8 @@ namespace Bezel.Bridge
     {
         public string type;
         public string @event;
-        public string targetEntityIds;
+        public List<string> targetEntityIds;
+        public List<int> targetEntity_gltf_Ids = new List<int>();
     }
 
     [System.Serializable]
