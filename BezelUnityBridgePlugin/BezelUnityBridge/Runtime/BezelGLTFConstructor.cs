@@ -80,8 +80,6 @@ namespace Bezel.Bridge
 
                 TraverseObjectHierarchy(child, ref nodeID);
 
-                //Debug.Log("ID: " + nodeID + ", GameObject: " + child.name); 
-
                 nodeObjects.Add(child);
 
                 nodeID++;
@@ -98,7 +96,10 @@ namespace Bezel.Bridge
             {
                 bezelobject.gltf_id = id;
                 bezelobject.transform = nodeObjects[bezelobject.gltf_id];
-                bezelIdsLookup.Add(bezelobject.id, bezelobject.gltf_id);
+                if (!bezelIdsLookup.ContainsKey(bezelobject.id))
+                {
+                    bezelIdsLookup.Add(bezelobject.id, bezelobject.gltf_id);
+                }
                 id++;
             }
         }

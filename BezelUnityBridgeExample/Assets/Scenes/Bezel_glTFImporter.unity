@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 277853018}
   - component: {fileID: 277853017}
   - component: {fileID: 277853016}
-  - component: {fileID: 277853019}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -208,21 +207,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 26.8, y: 133.54, z: 0}
---- !u!114 &277853019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 277853015}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d95fca7c23654dc695a29b7c4dbdae4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncKey: AppleVisionPro--f19bf4f5-5a86-4686-8136-9106815bdf89
-  download: 0
-  downloadPercentage: 
 --- !u!1001 &523799105
 PrefabInstance:
   m_ObjectHideFlags: 0
