@@ -21,6 +21,12 @@ namespace Bezel.Bridge.Editor.Settings
 
         private static string bezelAPIUrl = "https://api.bezel.it/v1/objects/?id=public/";
 
+        //// We'll cache the access token in editor Player prefs
+        //private const string BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY = "BEZEL_PERSONAL_ACCESS_TOKEN";
+
+        //// Cached personal access token, retrieved from PlayerPrefs
+        //private static string s_PersonalAccessToken;
+
         [MenuItem("Bezel Bridge/Open Settings File")]
         static void SelectSettings()
         {
@@ -106,6 +112,9 @@ namespace Bezel.Bridge.Editor.Settings
                 Directory.CreateDirectory(s_BezelUnityBridgeSettings.FileDirectory);
             }
 
+            //// Todo: Get stored personal access key
+            //s_PersonalAccessToken = PlayerPrefs.GetString(BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY);
+
             if (Application.isPlaying)
             {
                 EditorUtility.DisplayDialog("Bezel Unity Bridge Importer", "Please exit play mode before importing", "OK");
@@ -144,6 +153,9 @@ namespace Bezel.Bridge.Editor.Settings
             Debug.Log("API Path: " + apiPath);
 
             UnityWebRequest webRequest = UnityWebRequest.Get(apiPath);
+            ////Todo: Provide access token
+            //webRequest.SetRequestHeader("Bezel-Token", s_PersonalAccessToken);
+
             await webRequest.SendWebRequest();
             try
             {
@@ -220,7 +232,8 @@ namespace Bezel.Bridge.Editor.Settings
             string file_name = "bezel";
             string extension = ".gltf";
 
-            file_name = key.Substring(0, key.IndexOf("--")) + extension;
+            file_name = key.Substring(0, key.IndexOf("-")) + extension;
+
             return file_name;
         }
     }
