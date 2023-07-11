@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Text;
 using Bezel.Bridge.Editor.Settings;
 using Bezel.Bridge.Editor.Utils;
+using System.Net;
+using System.Security.Policy;
 
 namespace Bezel.Bridge.Editor.Settings
 {
@@ -21,11 +23,12 @@ namespace Bezel.Bridge.Editor.Settings
 
         private static string bezelAPIUrl = "https://api.bezel.it/v1/objects/?id=public/";
 
-        //// We'll cache the access token in editor Player prefs
-        //private const string BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY = "BEZEL_PERSONAL_ACCESS_TOKEN";
+        // We'll cache the access token in editor Player prefs
+        private const string BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY = "BEZEL_PERSONAL_ACCESS_TOKEN";
+        private const string BEZEL_ACCESS_TOKEN_NAME = "BezelToken";
 
-        //// Cached personal access token, retrieved from PlayerPrefs
-        //private static string s_PersonalAccessToken;
+        // Cached personal access token, retrieved from PlayerPrefs
+        private static string s_PersonalAccessToken;
 
         [MenuItem("Bezel Bridge/Open Settings File")]
         static void SelectSettings()
@@ -65,16 +68,32 @@ namespace Bezel.Bridge.Editor.Settings
         [MenuItem("Bezel Bridge/Set Personal Access Token")]
         static void SetPersonalAccessToken()
         {
-            // Todo: Implement RequestPersonalAccessToken
             Debug.Log("Bezel Editor: Open window for entering token.");
+            RequestPersonalAccessToken();
         }
 
         [MenuItem("Bezel Bridge/Set Personal Access Token", true)]
         static bool ValidateSetPersonalAccessToken()
         {
             // Return true if the menu item should be enabled, false if it should be disabled
+            return true;
+        }
+
+        static bool RequestPersonalAccessToken()
+        {
+            s_PersonalAccessToken = PlayerPrefs.GetString(BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY);
+            var newAccessToken = EditorInputDialog.Show("Personal Access Token", "Please enter your Bezel Personal Access Token (you can create in the 'Account Settings' page)", s_PersonalAccessToken);
+            if (!string.IsNullOrEmpty(newAccessToken))
+            {
+                s_PersonalAccessToken = newAccessToken;
+                Debug.Log($"New access token set {s_PersonalAccessToken}");
+                PlayerPrefs.SetString(BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY, s_PersonalAccessToken);
+                return true;
+            }
+
             return false;
         }
+
 
         /// <summary>
         /// Check to make sure all requirements are met before syncing
@@ -112,8 +131,13 @@ namespace Bezel.Bridge.Editor.Settings
                 Directory.CreateDirectory(s_BezelUnityBridgeSettings.FileDirectory);
             }
 
-            //// Todo: Get stored personal access key
-            //s_PersonalAccessToken = PlayerPrefs.GetString(BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY);
+            s_PersonalAccessToken = PlayerPrefs.GetString(BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY);
+
+            if (string.IsNullOrEmpty(s_PersonalAccessToken))
+            {
+                var setToken = RequestPersonalAccessToken();
+                if (!setToken) return false;
+            }
 
             if (Application.isPlaying)
             {
@@ -127,9 +151,6 @@ namespace Bezel.Bridge.Editor.Settings
 
         private static async void ImportBezelFile(string _syncKey)
         {
-            
-            //StartCoroutine(DownloadFileCoroutine(path));
-
             EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", $"Downloading file", 0);
 
             try
@@ -148,13 +169,11 @@ namespace Bezel.Bridge.Editor.Settings
 
         public static async Task<String> GetBezelFile(string syncKey)
         {
-            string apiPath = bezelAPIUrl + syncKey;
+            string apiPath = bezelAPIUrl + syncKey + "&" +
+                BEZEL_ACCESS_TOKEN_NAME + "=" + s_PersonalAccessToken;
             string downloadPath = "";
-            Debug.Log("API Path: " + apiPath);
 
             UnityWebRequest webRequest = UnityWebRequest.Get(apiPath);
-            ////Todo: Provide access token
-            //webRequest.SetRequestHeader("Bezel-Token", s_PersonalAccessToken);
 
             await webRequest.SendWebRequest();
             try
@@ -172,7 +191,7 @@ namespace Bezel.Bridge.Editor.Settings
                 else
                 {
                     EditorUtility.ClearProgressBar();
-                    Debug.LogError("Path Missing. Error: " + webRequest.error);
+                    Debug.LogError("Request Error: " + webRequest.error);
                 }
             }
             catch (Exception e)
