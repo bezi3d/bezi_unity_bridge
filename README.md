@@ -1,13 +1,7 @@
 # UnitySDK
 Bezel integration with Unity
 
-Bezel
-
-https://github.com/bezel3d/UnitySDK/assets/11589978/e061d846-6544-48d6-989d-0aaab4c73393
-
-Unity
-
-https://github.com/bezel3d/UnitySDK/assets/11589978/c99768b0-8b9d-429d-a54e-97784cfb4aaf
+https://github.com/bezel3d/UnitySDK/assets/11589978/0cf5c852-aa24-4973-87c7-02b9615d6d00
 
 # Installation (In the following order)
 1. Install GLTF Utility. 
@@ -17,6 +11,7 @@ https://github.com/bezel3d/UnitySDK/assets/11589978/c99768b0-8b9d-429d-a54e-9778
 
 # Try it out
 1. Open this link from browser. https://gltf-ui.djofimhojhejv.amplifyapp.com/file/687e56a6-7676-487c-af3c-a40fbc181b86
-2. Go to Share panel, navigate to Engine > Create key or Copy key (if already created)
-3. On Unity side, open project from {your_local_folder}/UnitySDK/BezelUnityBridgeExample
-4. Paste the sync key in Unity Bezel Bridge settings, and hit import
+2. To get **Sync Key**, in each file, go to Share panel, navigate to Unity Integration to create key or copy key (if already created)
+3. To get **Access Token**, go to Account Settings > Integration, navigate to Unity Integration to create token. 
+4. On Unity side, open project from {your_local_folder}/UnitySDK/BezelUnityBridgeExample
+5. Paste the sync key and access token in Unity Bezel Bridge settings, and hit **Import from Sync Key**.
