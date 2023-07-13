@@ -86,7 +86,6 @@ namespace Bezel.Bridge
             }
         }
 
-        //Todo: Return status code (fail, success, ..etc)
         private static bool AttachBezelSchemaToRootObject(GameObject gameObject)
         {
             if (bezelRoot.rootObject == null) return false;
@@ -123,6 +122,10 @@ namespace Bezel.Bridge
             foreach (var bezelobject in bezelRoot.rootObject.bezel_objects)
             {
                 Transform nodeObject = nodeObjects[bezelobject.gltf_id];
+
+                // Set visibility
+                nodeObject.gameObject.SetActive(bezelobject.visible);
+
                 // Todo: Clean up to standarize assignment
                 if (bezelobject.states.Count == 0 && bezelobject.interactions.Count == 0) {
                     continue;
