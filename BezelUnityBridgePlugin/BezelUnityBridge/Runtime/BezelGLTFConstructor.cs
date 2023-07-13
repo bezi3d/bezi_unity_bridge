@@ -26,7 +26,7 @@ namespace Bezel.Bridge
 
             if (!StoreImportedObjectTransform(gameObject)) return;
 
-            AttachBezelSchemaToRootObject(gameObject);
+            if (!AttachBezelSchemaToRootObject(gameObject)) return;
 
             AttachBezelBehavior();
         }
@@ -87,10 +87,18 @@ namespace Bezel.Bridge
         }
 
         //Todo: Return status code (fail, success, ..etc)
-        private static void AttachBezelSchemaToRootObject(GameObject gameObject)
+        private static bool AttachBezelSchemaToRootObject(GameObject gameObject)
         {
-            if (bezelRoot.rootObject == null) return;
-            if (nodeObjects == null) return;
+            if (bezelRoot.rootObject == null) return false;
+            if (nodeObjects == null) return false;
+
+            List<BezelObject> bObjects = bezelRoot.rootObject.bezel_objects;
+
+            if (nodeObjects.Count != bObjects.Count)
+            {
+                Debug.LogError("Export glTF object count ("+ nodeObjects.Count +") is not the same as the bezel schema count ("+ bObjects.Count + ")!");
+                return false;
+            }
             int id = 0;
             foreach (var bezelobject in bezelRoot.rootObject.bezel_objects)
             {
@@ -102,6 +110,8 @@ namespace Bezel.Bridge
                 }
                 id++;
             }
+
+            return true;
         }
 
         //Todo: Return status code (fail, success, ..etc)
@@ -125,7 +135,15 @@ namespace Bezel.Bridge
 
                 foreach (var _s in bezelobject.states)
                 {
-                    nodeObject.gameObject.GetComponent<BezelBehavior>().targetRotation = Quaternion.Euler(_s.Value.rotation[0] * Mathf.Rad2Deg, _s.Value.rotation[1] * Mathf.Rad2Deg, _s.Value.rotation[2] * Mathf.Rad2Deg);
+                    BezelBehavior bezelBehavior = nodeObject.gameObject.GetComponent<BezelBehavior>();
+
+                    if (bezelBehavior != null && _s.Value.rotation != null)
+                    {
+                        bezelBehavior.targetRotation = Quaternion.Euler(
+                            _s.Value.rotation[0] * Mathf.Rad2Deg,
+                                       _s.Value.rotation[1] * Mathf.Rad2Deg,
+                                       _s.Value.rotation[2] * Mathf.Rad2Deg);
+                    }
                 }
 
                 foreach (var bezelinteraction in bezelobject.interactions)
