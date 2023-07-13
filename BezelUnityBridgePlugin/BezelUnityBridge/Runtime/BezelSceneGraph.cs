@@ -18,6 +18,7 @@ namespace Bezel.Bridge
         public string id;
         public string type;
         public string name;
+        public bool visible;
         public Transform transform;
         public UDictionary<string, State> states;
         public UDictionary<string, Interaction> interactions;
