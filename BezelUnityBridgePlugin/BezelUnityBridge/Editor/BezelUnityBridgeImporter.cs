@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Text;
+using Bezel.Bridge;
 using Bezel.Bridge.Editor.Settings;
 using Bezel.Bridge.Editor.Utils;
 using System.Net;
@@ -22,9 +23,11 @@ namespace Bezel.Bridge.Editor.Settings
         private static BezelUnityBridgeSettings s_BezelUnityBridgeSettings;
 
         private static string bezelAPIUrl = "https://api.bezel.it/v1/objects/?id=public/";
+        private static string bezelAPIUrl_ = "https://api.bezel.it/v1/objects/?";
 
         // We'll cache the access token in editor Player prefs
         private const string BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY = "BEZEL_PERSONAL_ACCESS_TOKEN";
+        private const string BEZEL_SYNC_KEY_NAME = "SyncKey";
         private const string BEZEL_ACCESS_TOKEN_NAME = "BezelToken";
 
         // Cached personal access token, retrieved from PlayerPrefs
@@ -169,9 +172,9 @@ namespace Bezel.Bridge.Editor.Settings
 
         public static async Task<String> GetBezelFile(string syncKey)
         {
-            string apiPath = bezelAPIUrl + syncKey + "&" +
-                BEZEL_ACCESS_TOKEN_NAME + "=" + s_PersonalAccessToken;
-            string downloadPath = "";
+            string apiPath = bezelAPIUrl_ +  BEZEL_SYNC_KEY_NAME + "=" + syncKey + "&" +
+                                            BEZEL_ACCESS_TOKEN_NAME + "=" + s_PersonalAccessToken;
+            string api_response = "";
 
             UnityWebRequest webRequest = UnityWebRequest.Get(apiPath);
 
@@ -182,11 +185,13 @@ namespace Bezel.Bridge.Editor.Settings
                 {
                     byte[] data = webRequest.downloadHandler.data;
 
-                    downloadPath = Encoding.UTF8.GetString(data);
+                    api_response = Encoding.UTF8.GetString(data);
 
-                    Debug.Log("Large File Path is Ready: " + downloadPath);
+                    var result = JsonUtility.FromJson<API_Response>(api_response);
 
-                    await DownloadLargeFileCoroutine(downloadPath);
+                    s_BezelUnityBridgeSettings.setBezelFileURL(result.bezelUrl);
+
+                    await DownloadLargeFileCoroutine(result.download);
                 }
                 else
                 {
@@ -200,7 +205,7 @@ namespace Bezel.Bridge.Editor.Settings
                 Debug.LogError("Invalid Sync Key:" + e.ToString());
             }
 
-            return downloadPath;
+            return api_response;
         }
 
         public static async Task<String> DownloadLargeFileCoroutine(string s3Path)
@@ -255,5 +260,12 @@ namespace Bezel.Bridge.Editor.Settings
 
             return file_name;
         }
+    }
+
+    [System.Serializable]
+    internal class API_Response
+    { 
+        public string download;
+        public string bezelUrl;
     }
 }
