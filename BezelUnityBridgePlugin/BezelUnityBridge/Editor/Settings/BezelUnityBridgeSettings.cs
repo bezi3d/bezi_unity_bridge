@@ -10,8 +10,16 @@ namespace Bezel.Bridge.Editor.Settings
         [Tooltip("The Unity Project Folder")]
         public string FileDirectory = "Assets/SampleFiles/";
 
-        [Tooltip("Generate logic and linking of Bezel scene based on glTF's 'extras' information")]
-        public bool BuildPrototypeFlow = false;
+        private string bezelFileUrl = "";
+
+        public string getBezelFileURL() {
+            return bezelFileUrl;
+        }
+
+        public void setBezelFileURL(string newValue)
+        {
+            bezelFileUrl = newValue;
+        }
     }
 
 }
