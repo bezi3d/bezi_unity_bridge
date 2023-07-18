@@ -33,7 +33,7 @@ namespace Bezel.Bridge.Editor.Settings
         // Cached personal access token, retrieved from PlayerPrefs
         private static string s_PersonalAccessToken;
 
-        [MenuItem("Bezel Bridge/Open Settings File")]
+        [MenuItem("Bezel Bridge/Open Bezel Settings Menu")]
         static void SelectSettings()
         {
             var requirementsMet = CheckRequirements();
@@ -42,8 +42,7 @@ namespace Bezel.Bridge.Editor.Settings
             Debug.Log("Bezel Editor: Open SelectSettings.");
         }
 
-        [MenuItem("Bezel Bridge/Import from Sync Key")]
-        static void ImportFromSyncKeyl()
+        public static void ImportFromSyncKey()
         {
             Debug.Log("Bezel Editor: Download and import from sync key.");
             var requirementsMet = CheckRequirements();
@@ -51,21 +50,6 @@ namespace Bezel.Bridge.Editor.Settings
             {
                 ImportBezelFile(s_BezelUnityBridgeSettings.SyncKey);
             }
-        }
-
-        [MenuItem("Bezel Bridge/Load into Unity Hierachy")]
-        static void LoadIntoHierachy()
-        {
-            //Debug.Log("Selected Transform is on " + Selection.activeTransform.gameObject.name + ".");
-            Debug.Log("Bezel Editor: Load into hierachy.");
-
-        }
-
-        [MenuItem("Bezel Bridge/Load into Unity Hierachy", true)]
-        static bool ValidateLoadIntoHierachy()
-        {
-            // Return true if the menu item should be enabled, false if it should be disabled
-            return false;
         }
 
         [MenuItem("Bezel Bridge/Set Personal Access Token")]

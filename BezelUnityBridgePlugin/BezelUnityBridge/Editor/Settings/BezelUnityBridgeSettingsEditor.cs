@@ -8,7 +8,14 @@ using Codice.CM.Common.Tree;
 [CustomEditor(typeof(BezelUnityBridgeSettings))]
 public class BezelUnityBridgeSettingsEditor : Editor
 {
-    string inputText = "Hello";
+    private Texture2D bezelLogo;
+
+    void OnEnable() {
+        // Load from Editor folder
+        var assets = AssetDatabase.FindAssets("bezel_icon_logo");
+        if (assets == null || assets.Length == 0) return;
+        bezelLogo = (Texture2D)AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(assets[0]), typeof(Texture2D));
+    }
 
     public override void OnInspectorGUI()
     {
@@ -17,11 +24,12 @@ public class BezelUnityBridgeSettingsEditor : Editor
         GUIStyle titleStyle = new GUIStyle(GUI.skin.label);
         titleStyle.fontStyle = FontStyle.Bold;
         titleStyle.fontSize = 20;
-
-
+        
         // Title
-        GUILayout.Label("Bezel Bridge", titleStyle);
-        //Rect titleRect = GUILayoutUtility.GetRect(100, 10);
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(bezelLogo, GUILayout.Width(64), GUILayout.Height(64));
+        GUILayout.Label("Bezel Bridge", titleStyle, GUILayout.Height(64), GUILayout.ExpandWidth(true));
+        GUILayout.EndHorizontal();
 
         // Divider
         EditorGUILayout.Separator();
@@ -35,18 +43,24 @@ public class BezelUnityBridgeSettingsEditor : Editor
         // Divider
         EditorGUILayout.Separator();
 
+        EditorGUILayout.LabelField("Import", EditorStyles.boldLabel);
+
+
+        if (GUILayout.Button("Import Bezel file into Unity"))
+        {
+            BezelUnityBridgeImporter.ImportFromSyncKey();
+        }
+
+        // Divider
+        EditorGUILayout.Separator();
         EditorGUILayout.LabelField("Reference", EditorStyles.boldLabel);
 
         //EditorGUI.DrawRect(titleRect, Color.grey);
 
 
-        if (GUILayout.Button("Link to Bezel file"))
+        if (GUILayout.Button("Open Bezel file on Browser"))
         {
             Application.OpenURL(settings.getBezelFileURL());
         }
-
-
-
-
     }
 }
