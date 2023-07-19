@@ -9,6 +9,9 @@ using Codice.CM.Common.Tree;
 public class BezelUnityBridgeSettingsEditor : Editor
 {
     private Texture2D bezelLogo;
+    private string syncKey;
+
+    string accessToken;
 
     void OnEnable() {
         // Load from Editor folder
@@ -26,38 +29,53 @@ public class BezelUnityBridgeSettingsEditor : Editor
         titleStyle.fontSize = 20;
         
         // Title
-        GUILayout.BeginHorizontal();
+        EditorGUILayout.BeginHorizontal();
         GUILayout.Label(bezelLogo, GUILayout.Width(64), GUILayout.Height(64));
-        GUILayout.Label("Bezel Bridge", titleStyle, GUILayout.Height(64), GUILayout.ExpandWidth(true));
-        GUILayout.EndHorizontal();
-
-        // Divider
+        EditorGUILayout.LabelField("Bezel Bridge", titleStyle, GUILayout.Height(64), GUILayout.ExpandWidth(true));
+        EditorGUILayout.EndHorizontal();
         EditorGUILayout.Separator();
 
+        // Setting
         EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
 
-        // Just use the default editor
-        DrawDefaultInspector();
-        //EditorGUILayout.TextField("Name", inputText, EditorStyles.textField);
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Step 1: Access Token", GUILayout.MaxWidth(130));
+        EditorGUILayout.Space();
+        accessToken = EditorGUILayout.PasswordField(
+            EditorPrefs.GetString(BezelUnityBridgeImporter.BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY), 
+            GUILayout.MaxWidth(300));
+        EditorPrefs.SetString(BezelUnityBridgeImporter.BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY, accessToken);
+        EditorGUILayout.EndHorizontal();
+        
+        settings.setSyncKey(EditorGUILayout.TextField("Step 2: Sync Key", settings.getSyncKey(), GUILayout.ExpandWidth(true)));
 
-        // Divider
+        settings.setFileDirectory(EditorGUILayout.TextField("Step 3: Unity File Directory", settings.getFileDirectory(), GUILayout.ExpandWidth(true)));
+
+
         EditorGUILayout.Separator();
 
+        // Import
         EditorGUILayout.LabelField("Import", EditorStyles.boldLabel);
-
 
         if (GUILayout.Button("Import Bezel file into Unity"))
         {
             BezelUnityBridgeImporter.ImportFromSyncKey();
         }
 
-        // Divider
         EditorGUILayout.Separator();
+
+        // Reference
+        // if (!settings.getImportSuccessStatus()) return;
+        if(settings.getBezelFileURL() == "") return;
+
         EditorGUILayout.LabelField("Reference", EditorStyles.boldLabel);
 
-        //EditorGUI.DrawRect(titleRect, Color.grey);
-
-
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Bezel File URL");
+        GUILayout.Label(settings.getBezelFileURL());
+        GUILayout.EndHorizontal();
+        
+        EditorGUILayout.Separator();
         if (GUILayout.Button("Open Bezel file on Browser"))
         {
             Application.OpenURL(settings.getBezelFileURL());
