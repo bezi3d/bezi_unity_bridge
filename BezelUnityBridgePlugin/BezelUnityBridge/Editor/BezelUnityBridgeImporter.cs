@@ -26,14 +26,14 @@ namespace Bezel.Bridge.Editor.Settings
         private static string bezelAPIUrl_ = "https://api.bezel.it/v1/objects/?";
 
         // We'll cache the access token in editor Player prefs
-        private const string BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY = "BEZEL_PERSONAL_ACCESS_TOKEN";
+        public const string BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY = "BEZEL_PERSONAL_ACCESS_TOKEN";
         private const string BEZEL_SYNC_KEY_NAME = "SyncKey";
         private const string BEZEL_ACCESS_TOKEN_NAME = "BezelToken";
 
-        // Cached personal access token, retrieved from PlayerPrefs
-        private static string s_PersonalAccessToken;
+        public static string s_PersonalAccessToken;
+        private static string downloadFilePath;
 
-        [MenuItem("Bezel Bridge/Open Settings File")]
+        [MenuItem("Bezel Bridge/Open Bezel Settings Menu")]
         static void SelectSettings()
         {
             var requirementsMet = CheckRequirements();
@@ -42,37 +42,18 @@ namespace Bezel.Bridge.Editor.Settings
             Debug.Log("Bezel Editor: Open SelectSettings.");
         }
 
-        [MenuItem("Bezel Bridge/Import from Sync Key")]
-        static void ImportFromSyncKeyl()
+        public static async void ImportFromSyncKey()
         {
             Debug.Log("Bezel Editor: Download and import from sync key.");
             var requirementsMet = CheckRequirements();
             if (requirementsMet)
             {
-                ImportBezelFile(s_BezelUnityBridgeSettings.SyncKey);
+                bool result = await ImportBezelFile(s_BezelUnityBridgeSettings.SyncKey);
+                //Trigger importing glTF after downloading 
+                if(result){
+                    AssetDatabase.ImportAsset(downloadFilePath);
+                }
             }
-        }
-
-        [MenuItem("Bezel Bridge/Load into Unity Hierachy")]
-        static void LoadIntoHierachy()
-        {
-            //Debug.Log("Selected Transform is on " + Selection.activeTransform.gameObject.name + ".");
-            Debug.Log("Bezel Editor: Load into hierachy.");
-
-        }
-
-        [MenuItem("Bezel Bridge/Load into Unity Hierachy", true)]
-        static bool ValidateLoadIntoHierachy()
-        {
-            // Return true if the menu item should be enabled, false if it should be disabled
-            return false;
-        }
-
-        [MenuItem("Bezel Bridge/Set Personal Access Token")]
-        static void SetPersonalAccessToken()
-        {
-            Debug.Log("Bezel Editor: Open window for entering token.");
-            RequestPersonalAccessToken();
         }
 
         [MenuItem("Bezel Bridge/Set Personal Access Token", true)]
@@ -82,15 +63,12 @@ namespace Bezel.Bridge.Editor.Settings
             return true;
         }
 
-        static bool RequestPersonalAccessToken()
+        public static bool RequestPersonalAccessToken()
         {
-            s_PersonalAccessToken = PlayerPrefs.GetString(BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY);
-            var newAccessToken = EditorInputDialog.Show("Personal Access Token", "Please enter your Bezel Personal Access Token (you can create in the 'Account Settings' page)", s_PersonalAccessToken);
-            if (!string.IsNullOrEmpty(newAccessToken))
+            s_PersonalAccessToken = EditorPrefs.GetString(BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY);
+     
+            if (!string.IsNullOrEmpty(s_PersonalAccessToken))
             {
-                s_PersonalAccessToken = newAccessToken;
-                Debug.Log($"New access token set {s_PersonalAccessToken}");
-                PlayerPrefs.SetString(BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY, s_PersonalAccessToken);
                 return true;
             }
 
@@ -152,7 +130,7 @@ namespace Bezel.Bridge.Editor.Settings
 
         }
 
-        private static async void ImportBezelFile(string _syncKey)
+        private static async Task<bool> ImportBezelFile(string _syncKey)
         {
             EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", $"Downloading file", 0);
 
@@ -162,12 +140,14 @@ namespace Bezel.Bridge.Editor.Settings
             }
             catch (Exception e)
             {
+                return false;
                 EditorUtility.ClearProgressBar();
                 Debug.LogError("Error downloading Bezel file:" + e.ToString());
             }
 
             EditorUtility.ClearProgressBar();
 
+            return true;
         }
 
         public static async Task<String> GetBezelFile(string syncKey)
@@ -191,7 +171,7 @@ namespace Bezel.Bridge.Editor.Settings
 
                     s_BezelUnityBridgeSettings.setBezelFileURL(result.bezelUrl);
 
-                    await DownloadLargeFileCoroutine(result.download);
+                    downloadFilePath = await DownloadLargeFileCoroutine(result.download);
                 }
                 else
                 {

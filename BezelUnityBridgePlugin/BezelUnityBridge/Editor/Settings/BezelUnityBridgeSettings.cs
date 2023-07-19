@@ -10,16 +10,33 @@ namespace Bezel.Bridge.Editor.Settings
         [Tooltip("The Unity Project Folder")]
         public string FileDirectory = "Assets/SampleFiles/";
 
-        private string bezelFileUrl = "";
+        public string BezelFileURL = "";
+
+        public string getSyncKey() {
+            return SyncKey;
+        }
+
+        public void setSyncKey(string newValue)
+        {
+            SyncKey = newValue;
+        }
+
+        public string getFileDirectory() {
+            return FileDirectory;
+        }
+
+        public void setFileDirectory(string newValue)
+        {
+            FileDirectory = newValue;
+        }
 
         public string getBezelFileURL() {
-            return bezelFileUrl;
+            return BezelFileURL;
         }
 
         public void setBezelFileURL(string newValue)
         {
-            bezelFileUrl = newValue;
+            BezelFileURL = newValue;
         }
     }
-
 }
