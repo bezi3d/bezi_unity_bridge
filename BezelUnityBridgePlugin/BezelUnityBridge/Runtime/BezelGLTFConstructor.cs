@@ -150,8 +150,9 @@ namespace Bezel.Bridge
 
                 foreach (var bezelinteraction in bezelobject.interactions)
                 {
-
-                    if (bezelinteraction.Value.trigger != null) {
+                    if (bezelinteraction.Value != null && 
+                        bezelinteraction.Value.trigger != null && 
+                        bezelinteraction.Value.trigger.targetEntityIds != null) {
 
                         foreach (var targetEntityId in bezelinteraction.Value.trigger.targetEntityIds) {
 
