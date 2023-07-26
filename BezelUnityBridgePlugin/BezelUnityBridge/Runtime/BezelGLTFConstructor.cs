@@ -141,10 +141,7 @@ namespace Bezel.Bridge
 
                     if (bezelBehavior != null && _s.Value.rotation != null)
                     {
-                        bezelBehavior.targetRotation = Quaternion.Euler(
-                            _s.Value.rotation[0] * Mathf.Rad2Deg,
-                                       _s.Value.rotation[1] * Mathf.Rad2Deg,
-                                       _s.Value.rotation[2] * Mathf.Rad2Deg);
+                        // Todo: Setting up the states parameters 
                     }
                 }
 
@@ -161,8 +158,7 @@ namespace Bezel.Bridge
                             bezelinteraction.Value.trigger.targetEntity_gltf_Ids.Add(_targetEntity_gltf_Id);
 
                             // Insert target frame reference into the trigger frame
-                            // Todo: targetObjectTransform[0] is a hack before fully implementing the interaction
-                            nodeObject.gameObject.GetComponent<BezelBehavior>().targetObjectTransform[0] = nodeObjects[_targetEntity_gltf_Id];
+                            // Todo: To implement interactions, setup targetObjectTransform based on nodeObjects[_targetEntity_gltf_Id];
                         }
                     }
                 }
