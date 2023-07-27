@@ -18,7 +18,6 @@ namespace Bezel.Bridge.Editor
             // Load asset
             AnimationClip[] animations;
             if (importSettings == null) importSettings = new ImportSettings();
-            Debug.Log("Bezel GLTFImporter Design Time Import!");
             bezelExtrasProcessor = new BezelGLTFExtrasProcessor();
             importSettings.extrasProcessor = bezelExtrasProcessor;
 

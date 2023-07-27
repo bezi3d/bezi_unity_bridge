@@ -154,9 +154,16 @@ namespace Bezel.Bridge
                         foreach (var targetEntityId in bezelinteraction.Value.trigger.targetEntityIds) {
 
                             // Add the gltf id as part of the trigger event for future reference.
-                            int _targetEntity_gltf_Id = bezelIdsLookup[targetEntityId];
-                            bezelinteraction.Value.trigger.targetEntity_gltf_Ids.Add(_targetEntity_gltf_Id);
 
+                            // Add check to ensure dictionary look up is valid
+                            int _targetEntity_gltf_Id;
+
+                            if (bezelIdsLookup.TryGetValue(targetEntityId, out _targetEntity_gltf_Id)) {
+                                bezelinteraction.Value.trigger.targetEntity_gltf_Ids.Add(_targetEntity_gltf_Id);
+                            } else {
+                                Debug.LogWarning("[Bezel] Some objects (e.g. Text) can't be used as target. "+
+                                "The targetEntityId: " + targetEntityId + " is not found in the glTF object list.");
+                            }
                             // Insert target frame reference into the trigger frame
                             // Todo: To implement interactions, setup targetObjectTransform based on nodeObjects[_targetEntity_gltf_Id];
                         }
