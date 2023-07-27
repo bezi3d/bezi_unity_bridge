@@ -8,7 +8,7 @@ namespace Bezel.Bridge.Editor.Settings
         public string SyncKey = "";
 
         [Tooltip("The Unity Project Folder")]
-        public string FileDirectory = "Assets/SampleFiles/";
+        public string FileDirectory = "Assets/BezelFiles/";
 
         public string BezelFileURL = "";
 

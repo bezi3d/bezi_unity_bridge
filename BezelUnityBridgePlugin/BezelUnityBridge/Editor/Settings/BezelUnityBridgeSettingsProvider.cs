@@ -74,7 +74,7 @@ namespace Bezel.Bridge.Editor.Settings
             var newSettingsAsset = BezelUnityBridgeSettings.CreateInstance<BezelUnityBridgeSettings>();
 
             // Save to the project
-            AssetDatabase.CreateAsset(newSettingsAsset, "Assets/BezelUnityBridgeSettings.asset");
+            AssetDatabase.CreateAsset(newSettingsAsset, "Assets/BezelFiles/BezelUnityBridgeSettings.asset");
             AssetDatabase.SaveAssets();
             Debug.Log("Generating BezelUnityBridgeSettings asset", newSettingsAsset);
 

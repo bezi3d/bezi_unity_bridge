@@ -12,6 +12,9 @@ using Bezel.Bridge.Editor.Settings;
 using Bezel.Bridge.Editor.Utils;
 using System.Net;
 using System.Security.Policy;
+using System.Diagnostics.CodeAnalysis;
+
+#pragma warning disable CS4014 // webRequest.SendWebRequest() is not awaited intentionally
 
 namespace Bezel.Bridge.Editor.Settings
 {
@@ -22,8 +25,7 @@ namespace Bezel.Bridge.Editor.Settings
         /// </summary>
         private static BezelUnityBridgeSettings s_BezelUnityBridgeSettings;
 
-        private static string bezelAPIUrl = "https://api.bezel.it/v1/objects/?id=public/";
-        private static string bezelAPIUrl_ = "https://api.bezel.it/v1/objects/?";
+        private static string bezelAPIUrl = "https://api.bezel.it/v1/objects/?";
 
         // We'll cache the access token in editor Player prefs
         public const string BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY = "BEZEL_PERSONAL_ACCESS_TOKEN";
@@ -39,12 +41,10 @@ namespace Bezel.Bridge.Editor.Settings
             var requirementsMet = CheckRequirements();
             var bridgeSettings = BezelUnityBridgeSettingsProvider.FindUnityBridgeSettingsAsset();
             Selection.activeObject = bridgeSettings;
-            Debug.Log("Bezel Editor: Open SelectSettings.");
         }
 
         public static async void ImportFromSyncKey()
         {
-            Debug.Log("Bezel Editor: Download and import from sync key.");
             var requirementsMet = CheckRequirements();
             if (requirementsMet)
             {
@@ -90,8 +90,8 @@ namespace Bezel.Bridge.Editor.Settings
 
             if (s_BezelUnityBridgeSettings == null)
             {
-                if (EditorUtility.DisplayDialog("No Bezel Unity Bridge Settings File",
-                        "Create a new Bezel Unity bridge settings file? ", "Create", "Cancel"))
+                if (EditorUtility.DisplayDialog("Welcome to Bezel Bridge!",
+                        "Let's create a new Bezel Bridge settings file? ", "Create", "Cancel"))
                 {
                     s_BezelUnityBridgeSettings =
                         BezelUnityBridgeSettingsProvider.GenerateBezelUnityBridgeSettingsAsset();
@@ -102,22 +102,30 @@ namespace Bezel.Bridge.Editor.Settings
                 }
             }
 
-            if (s_BezelUnityBridgeSettings.SyncKey.Length == 0)
-            {
-                EditorUtility.DisplayDialog("Missing Bezel Information", "Bezel file sync key is not valid, please enter valid key", "OK");
-                return false;
-            }
-
-            if (!Directory.Exists(s_BezelUnityBridgeSettings.FileDirectory)) {
-                Directory.CreateDirectory(s_BezelUnityBridgeSettings.FileDirectory);
-            }
-
             s_PersonalAccessToken = PlayerPrefs.GetString(BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY);
 
             if (string.IsNullOrEmpty(s_PersonalAccessToken))
             {
                 var setToken = RequestPersonalAccessToken();
-                if (!setToken) return false;
+                if (!setToken) {      
+                    EditorUtility.DisplayDialog("Step 1: Enter Bezel Access Token", "Access token can be created under Bezel's account setting or Share panel. It ensures file security. ", "NEXT");              
+                    return false;
+                }
+            }
+
+            if (s_BezelUnityBridgeSettings.SyncKey.Length == 0)
+            {
+                EditorUtility.DisplayDialog("Step 2: Enter Bezel Sync Key", "After Step 1 (access token), sync key can be generated for each Bezel file under Share panel.", "NEXT");
+                return false;
+            }
+
+            if (!Directory.Exists(s_BezelUnityBridgeSettings.FileDirectory)) 
+            {
+                EditorUtility.DisplayDialog("Step 3: Setup Unity File Path", "After Step 2 (sync key), the imported file will be saved at: " + 
+                                            s_BezelUnityBridgeSettings.FileDirectory +". You can change the path as well.", "NEXT");
+                Directory.CreateDirectory(s_BezelUnityBridgeSettings.FileDirectory);
+                
+                return false;
             }
 
             if (Application.isPlaying)
@@ -132,7 +140,7 @@ namespace Bezel.Bridge.Editor.Settings
 
         private static async Task<bool> ImportBezelFile(string _syncKey)
         {
-            EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", $"Downloading file", 0);
+            EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", "Downloading file to "+ s_BezelUnityBridgeSettings.FileDirectory, 0);
 
             try
             {
@@ -140,9 +148,9 @@ namespace Bezel.Bridge.Editor.Settings
             }
             catch (Exception e)
             {
-                return false;
                 EditorUtility.ClearProgressBar();
                 Debug.LogError("Error downloading Bezel file:" + e.ToString());
+                return false;
             }
 
             EditorUtility.ClearProgressBar();
@@ -152,7 +160,7 @@ namespace Bezel.Bridge.Editor.Settings
 
         public static async Task<String> GetBezelFile(string syncKey)
         {
-            string apiPath = bezelAPIUrl_ +  BEZEL_SYNC_KEY_NAME + "=" + syncKey + "&" +
+            string apiPath = bezelAPIUrl +  BEZEL_SYNC_KEY_NAME + "=" + syncKey + "&" +
                                             BEZEL_ACCESS_TOKEN_NAME + "=" + s_PersonalAccessToken;
             string api_response = "";
 
@@ -198,13 +206,14 @@ namespace Bezel.Bridge.Editor.Settings
             webRequest.SendWebRequest();
 
             await WaitForDownloadComplete(webRequest);
+
             try
             {
                 if (webRequest.result == UnityWebRequest.Result.Success)
                 {
                     byte[] data = webRequest.downloadHandler.data;
                     System.IO.File.WriteAllBytes(savePath, data);
-                    Debug.Log("File downloaded successfully.");
+                    // Debug.Log("File downloaded successfully.");
                 }
                 else
                 {
@@ -225,7 +234,7 @@ namespace Bezel.Bridge.Editor.Settings
         {
             while(!webRequest.isDone)
             {
-                EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", $"Downloading file", webRequest.downloadProgress);
+                EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", "Downloading file to "+ s_BezelUnityBridgeSettings.FileDirectory, webRequest.downloadProgress);
 
                 await Task.Yield();
             }
