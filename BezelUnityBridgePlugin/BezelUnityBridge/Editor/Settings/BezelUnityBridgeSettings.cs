@@ -12,6 +12,8 @@ namespace Bezel.Bridge.Editor.Settings
 
         public string BezelFileURL = "";
 
+        private bool devMode = false;
+
         public string getSyncKey() {
             return SyncKey;
         }
@@ -37,6 +39,15 @@ namespace Bezel.Bridge.Editor.Settings
         public void setBezelFileURL(string newValue)
         {
             BezelFileURL = newValue;
+        }
+
+        public bool getDevMode() {
+            return devMode;
+        }
+
+        public void setDevMode(bool newValue)
+        {
+            devMode = newValue;
         }
     }
 }

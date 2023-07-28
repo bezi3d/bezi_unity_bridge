@@ -161,7 +161,8 @@ namespace Bezel.Bridge.Editor.Settings
         public static async Task<String> GetBezelFile(string syncKey)
         {
             string apiPath = bezelAPIUrl +  BEZEL_SYNC_KEY_NAME + "=" + syncKey + "&" +
-                                            BEZEL_ACCESS_TOKEN_NAME + "=" + s_PersonalAccessToken;
+                                            BEZEL_ACCESS_TOKEN_NAME + "=" + s_PersonalAccessToken + 
+                                            (s_BezelUnityBridgeSettings.getDevMode() ? "&DevMode=1" : "");
             string api_response = "";
 
             UnityWebRequest webRequest = UnityWebRequest.Get(apiPath);

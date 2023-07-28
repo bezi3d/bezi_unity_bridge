@@ -1,3 +1,5 @@
+// #define DEVMODE
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,9 +53,17 @@ public class BezelUnityBridgeSettingsEditor : Editor
 
         settings.setFileDirectory(EditorGUILayout.TextField("Step 3: Unity File Directory", settings.getFileDirectory(), GUILayout.ExpandWidth(true)));
 
+        EditorGUILayout.Separator();
+
+#if DEVMODE
+        // Setting
+        EditorGUILayout.LabelField("Development Mode", EditorStyles.boldLabel);
+        
+        settings.setDevMode(EditorGUILayout.Toggle("Dev Mode", settings.getDevMode()));
 
         EditorGUILayout.Separator();
 
+#endif
         // Import
         EditorGUILayout.LabelField("Import", EditorStyles.boldLabel);
 
