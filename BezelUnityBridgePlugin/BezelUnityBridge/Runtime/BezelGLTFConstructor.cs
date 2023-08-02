@@ -28,6 +28,8 @@ namespace Bezel.Bridge
             if (!AttachBezelSchemaToRootObject(gameObject)) return;
 
             AttachBezelBehavior();
+
+            AttachBezelText();
         }
 
         private static void ClearImportObjects() {
@@ -171,5 +173,34 @@ namespace Bezel.Bridge
                 }
             }
         }
+
+        private static void AttachBezelText() {
+            if (bezelRoot.rootObject == null) return;
+            if (nodeObjects == null) return;
+
+            int firstValid = 0;
+
+            foreach (var bezelobject in bezelRoot.rootObject.bezel_objects)
+            {
+                Transform nodeObject = nodeObjects[bezelobject.gltf_id];
+
+                if (bezelobject.type == "Text")
+                {
+                    if (firstValid == 0)
+                    {
+                        Debug.Log("========= Text: " + nodeObject.name);
+
+                        nodeObject.gameObject.AddComponent<BezelText>();
+                        nodeObject.gameObject.GetComponent<BezelText>().SetTextParameters(bezelobject.parameters);
+                    }
+
+                    firstValid++;
+                    if (firstValid == 3) { firstValid = 0; }
+
+                }
+
+            }
+        }
     }
 }
+

@@ -22,6 +22,7 @@ namespace Bezel.Bridge
         public Transform transform;
         public UDictionary<string, State> states;
         public UDictionary<string, Interaction> interactions;
+        public Parameters parameters;
     }
 
     // Bezel SceneObjectStatefulDataSchema
@@ -64,5 +65,24 @@ namespace Bezel.Bridge
         public string toStateId;
         public float duration;
         public float delay;
+    }
+
+    [System.Serializable]
+    public class Parameters
+    {
+        public string text;
+        public float fontSize;
+        public string fontFamily;
+        public string fontWeight;
+        public string textAlign;        // "left", "center", "right", "justify"
+        public string verticalAlign;    // "top", "middle", "bottom"
+        public string verticalTrim;     // "standard", "top-cap-to-bottom-baseline"
+        public string letterCase;       // "as-typed", "uppercase", "lowercase", "title-case",
+        public string lineHeight;
+        public float letterSpacing;
+        public float curveRadius;
+        public object maxWidth;
+        public object maxHeight;
+        public string color;
     }
 }
