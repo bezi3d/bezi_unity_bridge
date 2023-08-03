@@ -132,6 +132,14 @@ namespace Bezel.Bridge.Editor.Settings
                 return false;
             }
 
+            if (Shader.Find("TextMeshPro/Mobile/Distance Field") == null)
+            {
+                EditorUtility.DisplayDialog("Text Mesh Pro", "You need to install TestMeshPro Essentials. Use Window->Text Mesh Pro->Import TMP Essential Resources", "OK");
+                
+                return false;
+            }
+
+
             if (Application.isPlaying)
             {
                 EditorUtility.DisplayDialog("Bezel Unity Bridge Importer", "Please exit play mode before importing", "OK");
