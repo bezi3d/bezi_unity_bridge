@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using Bezel.Bridge.Editor.Fonts;
 
 namespace Bezel.Bridge
 {
@@ -188,8 +189,6 @@ namespace Bezel.Bridge
                 {
                     if (firstValid == 0)
                     {
-                        Debug.Log("========= Text: " + nodeObject.name);
-
                         nodeObject.gameObject.AddComponent<BezelText>();
                         nodeObject.gameObject.GetComponent<BezelText>().SetTextParameters(bezelobject.parameters);
                     }
