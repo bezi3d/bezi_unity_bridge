@@ -13,7 +13,9 @@ namespace Bezel.Bridge
         [SerializeField]
         private Parameters parameters;
 
-        private float magicScale = 0.135f; //Bezel to Unity font rescale
+        private float magicScale1 = 0.135f; //Bezel to Unity font rescale
+
+        private const float magicScale2 = 7.4f; //Bezel to Unity font rescale
 
         public async void SetTextParameters(Parameters parameters)
         {
@@ -41,7 +43,12 @@ namespace Bezel.Bridge
             // Set to default pivot point
             text.GetComponent<RectTransform>().pivot = new Vector2(0f, 1f);
 
-            text.GetComponent<RectTransform>().localScale = new Vector3(-magicScale, magicScale, magicScale);
+            text.GetComponent<RectTransform>().localScale = new Vector3(
+                -magicScale1, magicScale1, magicScale1);
+
+            // Todo: maxWidth and maxHeight;
+            text.GetComponent<RectTransform>().sizeDelta = new Vector2(
+                parameters.maxWidth * magicScale2, parameters.maxHeight * magicScale2);
 
             //letterSpacing
             text.characterSpacing = parameters.letterSpacing;
@@ -63,7 +70,6 @@ namespace Bezel.Bridge
                 "bottom" => VerticalAlignmentOptions.Bottom,
                 _ => VerticalAlignmentOptions.Top,
             };
-
 
 
             var effectMaterialPreset = GetEffectMaterialPreset(matchingFontMapping);
