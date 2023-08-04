@@ -3,8 +3,8 @@
     "rootNamespace": "",
     "references": [
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:21b0c8d1703a94250bfac916590cea4f",
-        "GUID:774f0e7b520e24644b448f5ac7fa5d94"
+        "GUID:774f0e7b520e24644b448f5ac7fa5d94",
+        "GUID:73a8f9ac6436742eb9bcf4a4b499132e"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -13,6 +13,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "Select...",
+            "expression": "",
+            "define": ""
+        }
+    ],
     "noEngineReferences": false
 }

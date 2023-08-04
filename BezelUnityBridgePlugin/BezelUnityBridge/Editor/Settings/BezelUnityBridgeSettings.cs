@@ -10,7 +10,13 @@ namespace Bezel.Bridge.Editor.Settings
         [Tooltip("The Unity Project Folder")]
         public string FileDirectory = "Assets/BezelFiles/";
 
+        public string FontsFolderName = "Fonts";
+
+        public string FontMaterialPresetsFolderName = "FontMaterialPresets";
+
         public string BezelFileURL = "";
+
+        private bool devMode = false;
 
         public string getSyncKey() {
             return SyncKey;
@@ -37,6 +43,15 @@ namespace Bezel.Bridge.Editor.Settings
         public void setBezelFileURL(string newValue)
         {
             BezelFileURL = newValue;
+        }
+
+        public bool getDevMode() {
+            return devMode;
+        }
+
+        public void setDevMode(bool newValue)
+        {
+            devMode = newValue;
         }
     }
 }

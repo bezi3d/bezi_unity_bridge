@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using Bezel.Bridge.Editor.Fonts;
 
 namespace Bezel.Bridge
 {
@@ -28,6 +29,8 @@ namespace Bezel.Bridge
             if (!AttachBezelSchemaToRootObject(gameObject)) return;
 
             AttachBezelBehavior();
+
+            AttachBezelText();
         }
 
         private static void ClearImportObjects() {
@@ -171,5 +174,38 @@ namespace Bezel.Bridge
                 }
             }
         }
+
+        private static void AttachBezelText() {
+            if (bezelRoot.rootObject == null) return;
+            if (nodeObjects == null) return;
+
+            int firstValid = 0;
+
+            foreach (var bezelobject in bezelRoot.rootObject.bezel_objects)
+            {
+                Transform nodeObject = nodeObjects[bezelobject.gltf_id];
+
+                if (bezelobject.type == "Text")
+                {
+                    if (firstValid == 0)
+                    {
+                        nodeObject.gameObject.AddComponent<BezelText>();
+                        nodeObject.gameObject.GetComponent<BezelText>().SetTextParameters(bezelobject.parameters);
+                    }
+
+                    // Remove custom text offset after alignment setting changed.
+                    if (firstValid == 1)
+                    {
+                        nodeObject.gameObject.transform.localPosition = Vector3.zero;
+                    }
+
+                    firstValid++;
+                    if (firstValid == 3) { firstValid = 0; }
+
+                }
+
+            }
+        }
     }
 }
+
