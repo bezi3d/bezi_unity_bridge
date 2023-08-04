@@ -193,6 +193,12 @@ namespace Bezel.Bridge
                         nodeObject.gameObject.GetComponent<BezelText>().SetTextParameters(bezelobject.parameters);
                     }
 
+                    // Remove custom text offset after alignment setting changed.
+                    if (firstValid == 1)
+                    {
+                        nodeObject.gameObject.transform.localPosition = Vector3.zero;
+                    }
+
                     firstValid++;
                     if (firstValid == 3) { firstValid = 0; }
 

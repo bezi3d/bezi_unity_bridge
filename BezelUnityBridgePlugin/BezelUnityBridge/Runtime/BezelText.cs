@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Bezel.Bridge.Editor.Fonts;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Bezel.Bridge
 {
@@ -25,17 +24,6 @@ namespace Bezel.Bridge
             this.gameObject.AddComponent<TextMeshPro>();
 
             TextMeshPro text = this.gameObject.GetComponent<TextMeshPro>();
-            text.text = parameters.text;
-            text.fontSize = parameters.fontSize;
-            text.color = convertColorCode(parameters.color);
-            //tmp.material.shader = 
-            // Set to default pivot point
-            text.GetComponent<RectTransform>().pivot = new Vector2(0f, 1f);
-
-            text.GetComponent<RectTransform>().localScale = new Vector3(-magicScale, magicScale, magicScale);
-
-            //letterSpacing
-            text.characterSpacing = parameters.letterSpacing;
 
             // Generate font map
             BezelFontMap fontMap = await GenerateFontMap();
@@ -44,6 +32,37 @@ namespace Bezel.Bridge
             var matchingFontMapping = fontMap.GetFontMapping(parameters.fontFamily, 400);
 
             text.font = matchingFontMapping.FontAsset;
+
+
+            text.text = parameters.text;
+            text.fontSize = parameters.fontSize;
+            text.color = convertColorCode(parameters.color);
+
+            // Set to default pivot point
+            text.GetComponent<RectTransform>().pivot = new Vector2(0f, 1f);
+
+            text.GetComponent<RectTransform>().localScale = new Vector3(-magicScale, magicScale, magicScale);
+
+            //letterSpacing
+            text.characterSpacing = parameters.letterSpacing;
+
+
+            text.horizontalAlignment = parameters.textAlign switch
+            {
+                "left" => HorizontalAlignmentOptions.Left,
+                "center" => HorizontalAlignmentOptions.Center,
+                "justify" => HorizontalAlignmentOptions.Justified,
+                "right" => HorizontalAlignmentOptions.Right,
+                _ => HorizontalAlignmentOptions.Left
+            };
+
+            text.verticalAlignment = parameters.verticalAlign switch
+            {
+                "top" => VerticalAlignmentOptions.Top,
+                "middle" => VerticalAlignmentOptions.Middle,
+                "bottom" => VerticalAlignmentOptions.Bottom,
+                _ => VerticalAlignmentOptions.Top,
+            };
 
 
 
