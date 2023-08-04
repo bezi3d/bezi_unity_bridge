@@ -245,11 +245,21 @@ namespace Bezel.Bridge.Editor.Settings
 
         public static string GetFontsFolder()
         {
+            if (s_BezelUnityBridgeSettings == null)
+            {
+                s_BezelUnityBridgeSettings = BezelUnityBridgeSettingsProvider.FindUnityBridgeSettingsAsset();
+            }
+
             return s_BezelUnityBridgeSettings.FileDirectory +"/"+s_BezelUnityBridgeSettings.FontsFolderName;
         }
 
         public static string GetFontMaterialPresetsFolder()
         {
+            if (s_BezelUnityBridgeSettings == null)
+            {
+                s_BezelUnityBridgeSettings = BezelUnityBridgeSettingsProvider.FindUnityBridgeSettingsAsset();
+            }
+
             return s_BezelUnityBridgeSettings.FileDirectory + "/" + s_BezelUnityBridgeSettings.FontMaterialPresetsFolderName;
         }
 
