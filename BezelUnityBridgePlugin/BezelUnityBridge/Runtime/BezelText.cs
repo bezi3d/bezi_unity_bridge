@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Bezel.Bridge.Editor.Fonts;
 using System.Threading.Tasks;
+using UnityEngine.Windows;
+using System;
 
 namespace Bezel.Bridge
 {
@@ -31,10 +33,18 @@ namespace Bezel.Bridge
             BezelFontMap fontMap = await GenerateFontMap();
 
             // Get font map
-            var matchingFontMapping = fontMap.GetFontMapping(parameters.fontFamily, 400);
+            BezelFontMapEntry matchingFontMapping = fontMap.GetFontMapping(parameters.fontFamily, 400);
 
-            text.font = matchingFontMapping.FontAsset;
+            try
+            {
+                text.font = matchingFontMapping.FontAsset;
+            }
+            catch (NullReferenceException)
+            {
 
+                // Handle exception
+                Debug.LogWarning("Ignoring NullRef due to TMP error");
+            }
 
             text.text = parameters.text;
             text.fontSize = parameters.fontSize;
@@ -46,9 +56,7 @@ namespace Bezel.Bridge
             text.GetComponent<RectTransform>().localScale = new Vector3(
                 -magicScale1, magicScale1, magicScale1);
 
-            // Todo: maxWidth and maxHeight;
-            text.GetComponent<RectTransform>().sizeDelta = new Vector2(
-                parameters.maxWidth * magicScale2, parameters.maxHeight * magicScale2);
+            text.GetComponent<RectTransform>().sizeDelta = getMaxHeightWidth(parameters);
 
             //letterSpacing
             text.characterSpacing = parameters.letterSpacing;
@@ -78,6 +86,7 @@ namespace Bezel.Bridge
 
         private async Task<BezelFontMap> GenerateFontMap()
         {
+            //Debug.Log("1: GenerateFontMap");
             // Generate font mapping data
             var bezelFontMapTask = FontManager.GenerateFontMapForDocument(parameters.fontFamily, 400, true);
 
@@ -101,13 +110,32 @@ namespace Bezel.Bridge
                         hasShadowEffect, shadowColor, shadowDistance, hasOutlineColor, outlineColor, outlineWidth);
         }
 
+        private Vector2 getMaxHeightWidth(Parameters p)
+        {
+            float maxWidth = 1.0f;
+            float maxHeight = 1.0f;
+            float parsed;
+            if (p.maxWidth != null && float.TryParse(p.maxWidth.ToString(), out parsed))
+            {
+                maxWidth = parsed;
+            }
+            if (p.maxHeight != null && float.TryParse(p.maxHeight.ToString(), out parsed))
+            {
+                maxHeight = parsed;
+            }
+
+            return new Vector2(
+                maxWidth * magicScale2, maxHeight * magicScale2);
+
+        }
 
         private Color convertColorCode(string colorCode)
         {
             Color color = Color.white;
             if (!ColorUtility.TryParseHtmlString(colorCode, out color))
             {
-                Debug.LogError("Invalid color code: " + colorCode);
+                color = Color.white;
+                //Debug.Log("Invalid color code: " + colorCode);
             }
 
             return color;
