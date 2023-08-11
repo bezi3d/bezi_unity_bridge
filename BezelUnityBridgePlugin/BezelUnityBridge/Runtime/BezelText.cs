@@ -49,7 +49,7 @@ namespace Bezel.Bridge
             text.text = parameters.text;
             text.fontSize = parameters.fontSize;
             text.color = convertColorCode(parameters.color);
-
+            
             // Set to default pivot point
             text.GetComponent<RectTransform>().pivot = new Vector2(0f, 1f);
 
@@ -60,7 +60,6 @@ namespace Bezel.Bridge
 
             //letterSpacing
             text.characterSpacing = parameters.letterSpacing;
-
 
             text.horizontalAlignment = parameters.textAlign switch
             {
@@ -79,6 +78,14 @@ namespace Bezel.Bridge
                 _ => VerticalAlignmentOptions.Top,
             };
 
+            text.fontStyle |= parameters.letterCase switch
+            {
+                "as-typed" => 0,
+                "uppercase" => FontStyles.UpperCase,
+                "lowercase" => FontStyles.LowerCase,
+                "title-case" => FontStyles.SmallCaps,
+                _ => 0
+            };
 
             var effectMaterialPreset = GetEffectMaterialPreset(matchingFontMapping);
             text.fontMaterial = effectMaterialPreset;
