@@ -6,18 +6,8 @@
       "source": "local",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "2.0.1-preview.1",
-        "com.unity.textmeshpro": "2.0.1",
-        "com.siccity.gltfutility": "0.7.2"
+        "com.unity.textmeshpro": "2.0.1"
       }
-    },
-    "com.siccity.gltfutility": {
-      "version": "https://github.com/siccity/gltfutility.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "2.0.0"
-      },
-      "hash": "96619fcd48ffe5c4ad122837a21601a6f7c20080"
     },
     "com.unity.collab-proxy": {
       "version": "1.17.7",
