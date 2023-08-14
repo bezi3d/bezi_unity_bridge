@@ -108,33 +108,31 @@ namespace Bezel.Bridge.Editor.Settings
             {
                 var setToken = RequestPersonalAccessToken();
                 if (!setToken) {
-                    EditorUtility.DisplayDialog("Step 1: Enter Bezel Access Token", "Access token can be created under Bezel's account setting or Share panel. It ensures file security. ", "NEXT");
+                    EditorUtility.DisplayDialog("Step 1: Enter Bezel Access Token", "Access token can be created under Bezel's account setting or Share panel. It ensures file security. ", "Enter Access Token");
                     return false;
                 }
             }
 
             if (s_BezelUnityBridgeSettings.SyncKey.Length == 0)
             {
-                EditorUtility.DisplayDialog("Step 2: Enter Bezel Sync Key", "After Step 1 (access token), sync key can be generated for each Bezel file under Share panel.", "NEXT");
+                EditorUtility.DisplayDialog("Step 2: Enter Bezel Sync Key", "After Step 1 (access token), sync key can be generated for each Bezel file under Share panel.", "Enter Sync Key");
                 return false;
             }
 
             if (!Directory.Exists(s_BezelUnityBridgeSettings.FileDirectory))
             {
                 EditorUtility.DisplayDialog("Step 3: Setup Unity File Path", "After Step 2 (sync key), the imported file will be saved at: " +
-                                            s_BezelUnityBridgeSettings.FileDirectory + ". You can change the path as well.", "NEXT");
+                                            s_BezelUnityBridgeSettings.FileDirectory + ". You can change the path as well.", "Create Folder");
                 Directory.CreateDirectory(s_BezelUnityBridgeSettings.FileDirectory);
 
                 Directory.CreateDirectory(GetFontsFolder());
 
                 Directory.CreateDirectory(GetFontMaterialPresetsFolder());
-
-                return false;
             }
 
             if (Shader.Find("TextMeshPro/Mobile/Distance Field") == null)
             {
-                EditorUtility.DisplayDialog("Text Mesh Pro", "You need to install TestMeshPro Essentials. Use Window->Text Mesh Pro->Import TMP Essential Resources", "OK");
+                EditorUtility.DisplayDialog("Text Mesh Pro", "You need to install TestMeshPro Essentials. Use Window->Text Mesh Pro->Import TMP Essential Resources", "STOP");
                 
                 return false;
             }
