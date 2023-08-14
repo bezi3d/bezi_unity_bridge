@@ -2,9 +2,9 @@
     "name": "BezelUnityBridgeGLTFUtility",
     "rootNamespace": "",
     "references": [
-        "GUID:774f0e7b520e24644b448f5ac7fa5d94",
-        "GUID:56f0af5eabd0f8244a313552ef7d963e",
-        "GUID:fd3d7785ae2014f7987bf6103257280c"
+        "GUID:fd3d7785ae2014f7987bf6103257280c",
+        "GUID:ab52f10c315894f179a5eaf684f1ac81",
+        "GUID:2458780fc05eb4561ab54a4753612fc3"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
