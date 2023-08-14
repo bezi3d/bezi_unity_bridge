@@ -9,19 +9,17 @@ namespace Bezel.Bridge
 {
     public class BezelBehavior : MonoBehaviour
     {
-        // Todo: Implement a proper set/get
-
-        [UDictionary.Split(20, 80)]
-        public UDictionary<string, State> states;
-        [UDictionary.Split(20, 90)]
-        public UDictionary<string, Interaction> interactions;
+        [SerializeField]
+        private UDictionary<string, State> states;
+        [SerializeField]
+        private UDictionary<string, Interaction> interactions;
 
         public bool ContainsStates = false;
         public bool ContainsInteractions = false;
 
         // Todo: Implement a proper set/get. This will require heavy rewrite to scale to transform array. Trigger multiple objects, each with different action...
-        [HideInInspector]
-        public Transform[] targetObjectTransform = new Transform[1];
+        // [HideInInspector]
+        // public Transform[] targetObjectTransform = new Transform[1];
 
         // Constructor
         public void AttachBezelBehavior(UDictionary<string, State> _states, UDictionary<string, Interaction> _interactions) {
