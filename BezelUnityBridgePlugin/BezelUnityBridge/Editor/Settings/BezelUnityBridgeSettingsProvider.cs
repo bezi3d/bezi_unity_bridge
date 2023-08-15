@@ -36,8 +36,6 @@ namespace Bezel.Bridge.Editor.Settings
         public override void OnActivate(string searchContext, VisualElement rootElement)
         {
             bezelUnityBridgeSettingsAsset = FindUnityBridgeSettingsAsset();
-
-            Debug.Log("BEzelUnityBrdige OnActivate");
         }
 
         public override void OnGUI(string searchContext)
