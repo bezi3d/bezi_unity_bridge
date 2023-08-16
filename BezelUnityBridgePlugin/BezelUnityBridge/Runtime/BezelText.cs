@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Bezel.Bridge.Editor.Fonts;
 using System.Threading.Tasks;
-using UnityEngine.Windows;
 using System;
 
 namespace Bezel.Bridge

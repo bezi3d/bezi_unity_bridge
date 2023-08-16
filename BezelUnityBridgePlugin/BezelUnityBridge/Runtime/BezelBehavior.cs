@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using static UnityEditor.FilePathAttribute;
 
 namespace Bezel.Bridge
 {

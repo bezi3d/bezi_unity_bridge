@@ -2,17 +2,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Text;
-using Bezel.Bridge;
-using Bezel.Bridge.Editor.Settings;
 using Bezel.Bridge.Editor.Utils;
-using System.Net;
-using System.Security.Policy;
-using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable CS4014 // webRequest.SendWebRequest() is not awaited intentionally
 

@@ -30,10 +30,7 @@ namespace Siccity.GLTFUtility {
 			SkinnedMeshRenderer[] skinnedRenderers = root.GetComponentsInChildren<SkinnedMeshRenderer>(true);
 			MeshFilter[] filters = root.GetComponentsInChildren<MeshFilter>(true);
 			AddMeshes(filters, skinnedRenderers, ctx, settings.generateLightmapUVs ? unwrapParams : null);
-			if (ctx != null)
-			{
-				AddMaterials(renderers, skinnedRenderers, ctx);
-			}
+			AddMaterials(renderers, skinnedRenderers, ctx);
 			AddAnimations(animations, ctx, settings.animationSettings);
 		}
 
