@@ -54,7 +54,7 @@ namespace Bezel.Bridge.Editor.Settings
 
                 if (importedGameObject != null)
                 {
-                    EditorUtility.DisplayDialog("Import Success", "Drag "+ fileNameFromSyncKey(s_BezelUnityBridgeSettings.SyncKey) + " from "+s_BezelUnityBridgeSettings.FileDirectory + "into Hierarchy", "Okay");
+                    EditorUtility.DisplayDialog("Import Success", "Drag " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.SyncKey) + " from " + s_BezelUnityBridgeSettings.FileDirectory + " into Hierarchy", "Okay");
                 }
                 else {
                     EditorUtility.DisplayDialog("Import Error", "Encounter import issue.", "STOP");

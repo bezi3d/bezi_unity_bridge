@@ -16,8 +16,9 @@ namespace Bezel.Bridge
         private const float magicScale2 = 7.4f; //Bezel to Unity font rescale
 
         public async Task<bool> SetTextParameters(Parameters parameters)
-        //public async void SetTextParameters(Parameters parameters)
         {
+            //Debug.Log("Enter SetTextParameters");
+
             this.parameters = parameters;
 
             this.gameObject.AddComponent<MeshRenderer>();
@@ -26,22 +27,10 @@ namespace Bezel.Bridge
 
             TextMeshPro text = this.gameObject.GetComponent<TextMeshPro>();
 
-            // Generate font map
-            BezelFontMap fontMap = await GenerateFontMap();
 
-            // Get font map
-            BezelFontMapEntry matchingFontMapping = fontMap.GetFontMapping(parameters.fontFamily, 400);
 
-            try
-            {
-                text.font = matchingFontMapping.FontAsset;
-            }
-            catch (NullReferenceException)
-            {
 
-                // Handle exception
-                Debug.LogWarning("Ignoring NullRef due to TMP error");
-            }
+
 
             text.text = parameters.text;
             text.fontSize = parameters.fontSize;
@@ -83,6 +72,36 @@ namespace Bezel.Bridge
                 "title-case" => FontStyles.SmallCaps,
                 _ => 0
             };
+
+
+
+
+
+
+            // Generate font map
+            BezelFontMap fontMap = await GenerateFontMap();
+
+            //System.Threading.Tasks.Task<BezelFontMap> task = GenerateFontMap();
+            //BezelFontMap fontMap = task.Result;
+
+            // Get font map
+            BezelFontMapEntry matchingFontMapping = fontMap.GetFontMapping(parameters.fontFamily, 400);
+
+            //Debug.Log(" ======= before matchingFontMapping.FontAsset! text: " + text + "|matchingFontMapping: "+ matchingFontMapping);
+
+            try
+            {
+                text.font = matchingFontMapping.FontAsset;
+            }
+            catch (NullReferenceException)
+            {
+
+                // Handle exception
+                Debug.LogWarning("Ignoring NullRef due to TMP error");
+            }
+
+            //Debug.Log(" ======= after matchingFontMapping.FontAsset!");
+
 
             var effectMaterialPreset = GetEffectMaterialPreset(matchingFontMapping);
             text.fontMaterial = effectMaterialPreset;

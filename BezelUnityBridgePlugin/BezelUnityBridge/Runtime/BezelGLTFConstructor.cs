@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using TMPro;
+
 //using Bezel.Bridge.Editor.Fonts;
 
 namespace Bezel.Bridge
@@ -20,6 +22,7 @@ namespace Bezel.Bridge
 
         public static void ObjectsContructor(GameObject gameObject, object objectItem)
         {
+            //Debug.Log("======= Start ObjectsContructor");
             ClearImportObjects();
 
             if (!DecodeBezelGLTFExtras(gameObject, objectItem)) return;
@@ -31,6 +34,7 @@ namespace Bezel.Bridge
             AttachBezelBehavior();
 
             AttachBezelText();
+            //Debug.Log("======= Finish ObjectsContructor");
         }
 
         private static void ClearImportObjects() {
@@ -183,20 +187,26 @@ namespace Bezel.Bridge
 
             foreach (var bezelobject in bezelRoot.rootObject.bezel_objects)
             {
-                Transform nodeObject = nodeObjects[bezelobject.gltf_id];
+                //Transform nodeObject = nodeObjects[bezelobject.gltf_id];
 
                 if (bezelobject.type == "Text")
                 {
                     if (firstValid == 0)
                     {
-                        nodeObject.gameObject.AddComponent<BezelText>();
-                        System.Threading.Tasks.Task<bool> task = nodeObject.gameObject.GetComponent<BezelText>().SetTextParameters(bezelobject.parameters);
+                        bezelobject.transform.gameObject.AddComponent<BezelText>();
+                        //bezelobject.transform.gameObject.AddComponent<MeshRenderer>();
+                        //bezelobject.transform.gameObject.AddComponent<TextMeshPro>();
+
+                        //Debug.Log("Before SetTextParameters");
+                        System.Threading.Tasks.Task<bool> task = bezelobject.transform.gameObject.GetComponent<BezelText>().SetTextParameters(bezelobject.parameters);
+
+                        //Debug.Log("After SetTextParameters");
                     }
 
                     // Remove custom text offset after alignment setting changed.
                     if (firstValid == 1)
                     {
-                        nodeObject.gameObject.transform.localPosition = Vector3.zero;
+                        bezelobject.transform.gameObject.transform.localPosition = Vector3.zero;
                     }
 
                     firstValid++;
