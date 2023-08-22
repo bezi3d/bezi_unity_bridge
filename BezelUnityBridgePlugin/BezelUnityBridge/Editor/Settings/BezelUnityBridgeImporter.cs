@@ -28,6 +28,9 @@ namespace Bezel.Bridge.Editor.Settings
         public static string s_PersonalAccessToken;
         private static string downloadFilePath;
 
+        public static GameObject importedGameObject;
+
+
         [MenuItem("Bezel Bridge/Open Bezel Settings Menu")]
         static void SelectSettings()
         {
@@ -45,7 +48,19 @@ namespace Bezel.Bridge.Editor.Settings
                 //Trigger importing glTF after downloading 
                 if (result) {
                     AssetDatabase.ImportAsset(downloadFilePath);
+
+
+                    importedGameObject = (GameObject)AssetDatabase.LoadAssetAtPath(downloadFilePath, typeof(GameObject));
+
+                    Debug.Log("===== importedGameObject = " + importedGameObject);
+
+                    //importedGameObject.GetComponent<BezelRoot>();
                 }
+
+
+
+
+
             }
         }
 

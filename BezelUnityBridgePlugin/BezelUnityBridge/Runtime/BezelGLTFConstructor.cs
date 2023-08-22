@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
-using Bezel.Bridge.Editor.Fonts;
+//using Bezel.Bridge.Editor.Fonts;
 
 namespace Bezel.Bridge
 {
@@ -190,7 +190,7 @@ namespace Bezel.Bridge
                     if (firstValid == 0)
                     {
                         nodeObject.gameObject.AddComponent<BezelText>();
-                        nodeObject.gameObject.GetComponent<BezelText>().SetTextParameters(bezelobject.parameters);
+                        System.Threading.Tasks.Task<bool> task = nodeObject.gameObject.GetComponent<BezelText>().SetTextParameters(bezelobject.parameters);
                     }
 
                     // Remove custom text offset after alignment setting changed.
