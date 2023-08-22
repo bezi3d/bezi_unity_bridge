@@ -49,18 +49,16 @@ namespace Bezel.Bridge.Editor.Settings
                 if (result) {
                     AssetDatabase.ImportAsset(downloadFilePath);
 
-
                     importedGameObject = (GameObject)AssetDatabase.LoadAssetAtPath(downloadFilePath, typeof(GameObject));
-
-                    Debug.Log("===== importedGameObject = " + importedGameObject);
-
-                    //importedGameObject.GetComponent<BezelRoot>();
                 }
 
-
-
-
-
+                if (importedGameObject != null)
+                {
+                    EditorUtility.DisplayDialog("Import Success", "Drag "+ fileNameFromSyncKey(s_BezelUnityBridgeSettings.SyncKey) + " from "+s_BezelUnityBridgeSettings.FileDirectory + "into Hierarchy", "Okay");
+                }
+                else {
+                    EditorUtility.DisplayDialog("Import Error", "Encounter import issue.", "STOP");
+                }
             }
         }
 
@@ -210,13 +208,12 @@ namespace Bezel.Bridge.Editor.Settings
                 else
                 {
                     EditorUtility.ClearProgressBar();
-                    Debug.LogError("Request Error: " + webRequest.error);
+                    EditorUtility.DisplayDialog("Import Error", "Access token or sync key may be invalid. Please try copy both strings again. ", "STOP");
                 }
             }
             catch (Exception e)
             {
                 EditorUtility.ClearProgressBar();
-                Debug.LogError("Invalid Sync Key:" + e.ToString());
             }
 
             return api_response;
