@@ -1,11 +1,8 @@
 //#define DEVMODE
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using Bezel.Bridge.Editor.Settings;
-using Codice.CM.Common.Tree;
 
 [CustomEditor(typeof(BezelUnityBridgeSettings))]
 public class BezelUnityBridgeSettingsEditor : Editor

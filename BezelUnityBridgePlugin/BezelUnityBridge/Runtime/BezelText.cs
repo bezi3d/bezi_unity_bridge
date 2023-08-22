@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Bezel.Bridge.Editor.Fonts;
 using System.Threading.Tasks;
-using UnityEngine.Windows;
 using System;
 
 namespace Bezel.Bridge
@@ -19,7 +15,8 @@ namespace Bezel.Bridge
 
         private const float magicScale2 = 7.4f; //Bezel to Unity font rescale
 
-        public async void SetTextParameters(Parameters parameters)
+        public async Task<bool> SetTextParameters(Parameters parameters)
+        //public async void SetTextParameters(Parameters parameters)
         {
             this.parameters = parameters;
 
@@ -49,7 +46,7 @@ namespace Bezel.Bridge
             text.text = parameters.text;
             text.fontSize = parameters.fontSize;
             text.color = convertColorCode(parameters.color);
-            
+
             // Set to default pivot point
             text.GetComponent<RectTransform>().pivot = new Vector2(0f, 1f);
 
@@ -89,11 +86,12 @@ namespace Bezel.Bridge
 
             var effectMaterialPreset = GetEffectMaterialPreset(matchingFontMapping);
             text.fontMaterial = effectMaterialPreset;
+
+            return true;
         }
 
         private async Task<BezelFontMap> GenerateFontMap()
         {
-            //Debug.Log("1: GenerateFontMap");
             // Generate font mapping data
             var bezelFontMapTask = FontManager.GenerateFontMapForDocument(parameters.fontFamily, 400, true);
 

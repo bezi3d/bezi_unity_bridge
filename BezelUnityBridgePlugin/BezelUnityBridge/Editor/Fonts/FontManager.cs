@@ -191,12 +191,12 @@ namespace Bezel.Bridge.Editor.Fonts
                 newMaterialPreset.SetFloat("_OutlineWidth",outlineThickness);
                 newMaterialPreset.SetColor("_OutlineColor",outlineColor);
             }
-            
-            AssetDatabase.CreateAsset(newMaterialPreset, $"{BezelUnityBridgeImporter.GetFontMaterialPresetsFolder()}/{materialName}.mat");
+
+            //AssetDatabase.CreateAsset(newMaterialPreset, $"{BezelUnityBridgeImporter.GetFontMaterialPresetsFolder()}/{materialName}.mat");
 
             fontMapEntry.FontmaterialVariations.Add(new FontMaterialVariation
             {
-                ShadowEnabled=shadow,
+                ShadowEnabled = shadow,
                 ShadowColor = shadowColor,
                 ShadowDistance = shadowDistance,
                 OutlineEnabled = outline,

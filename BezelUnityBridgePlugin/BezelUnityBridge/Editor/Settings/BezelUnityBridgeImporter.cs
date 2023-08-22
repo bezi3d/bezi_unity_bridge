@@ -2,17 +2,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Text;
-using Bezel.Bridge;
-using Bezel.Bridge.Editor.Settings;
 using Bezel.Bridge.Editor.Utils;
-using System.Net;
-using System.Security.Policy;
-using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable CS4014 // webRequest.SendWebRequest() is not awaited intentionally
 
@@ -35,6 +28,9 @@ namespace Bezel.Bridge.Editor.Settings
         public static string s_PersonalAccessToken;
         private static string downloadFilePath;
 
+        public static GameObject importedGameObject;
+
+
         [MenuItem("Bezel Bridge/Open Bezel Settings Menu")]
         static void SelectSettings()
         {
@@ -52,7 +48,19 @@ namespace Bezel.Bridge.Editor.Settings
                 //Trigger importing glTF after downloading 
                 if (result) {
                     AssetDatabase.ImportAsset(downloadFilePath);
+
+
+                    importedGameObject = (GameObject)AssetDatabase.LoadAssetAtPath(downloadFilePath, typeof(GameObject));
+
+                    Debug.Log("===== importedGameObject = " + importedGameObject);
+
+                    //importedGameObject.GetComponent<BezelRoot>();
                 }
+
+
+
+
+
             }
         }
 
