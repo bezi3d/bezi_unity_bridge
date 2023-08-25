@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -118,27 +119,22 @@ namespace Bezel.Bridge.Editor.Fonts
                 Debug.Log("Cant download font as not found");
                 return false;
             }
-
-            Debug.Log($"Downloading font {fontName} at url {fontDownloadUrl}");
-            
             
             var webRequest = UnityWebRequest.Get(fontDownloadUrl);
+
             await webRequest.SendWebRequest();
 
-            if (!(webRequest.result is UnityWebRequest.Result.Success))
+            if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogWarning($"Error downloading font {webRequest.error}");
                 return false;
             }
             
-            //Debug.Log($"Received font file  - size {webRequest.downloadHandler.data.Length}");
-
-
             var fontFilePath = PathToTtfFont(fontName, fontWeight);
             File.WriteAllBytes(fontFilePath,webRequest.downloadHandler.data);
-            
+
             AssetDatabase.ImportAsset(fontFilePath);
-            AssetDatabase.Refresh();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
 
             var ttfFontAsset = AssetDatabase.LoadAssetAtPath<Font>(fontFilePath);
             if (ttfFontAsset == null)
@@ -151,8 +147,8 @@ namespace Bezel.Bridge.Editor.Fonts
             // Some info here
             // https://forum.unity.com/threads/generate-font-asset-via-script.1057043/
             // And reference from TMPro_FontAssetCreatorWindow
-            
-            var tmpFontAsset=TMP_FontAsset.CreateFontAsset(ttfFontAsset);
+
+            var tmpFontAsset = TMP_FontAsset.CreateFontAsset(ttfFontAsset);
             var tmpFilePath = PathToTmpFont(fontName, fontWeight);
             
             AssetDatabase.CreateAsset(tmpFontAsset, tmpFilePath);
@@ -175,7 +171,6 @@ namespace Bezel.Bridge.Editor.Fonts
 
             return true;
         }
-
 
         private static string GetFontUrl(string fontName, int fontWeight)
         {
