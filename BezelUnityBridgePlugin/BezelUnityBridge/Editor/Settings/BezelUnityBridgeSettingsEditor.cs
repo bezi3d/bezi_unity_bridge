@@ -31,7 +31,6 @@ public class BezelUnityBridgeSettingsEditor : Editor
 
         GUIStyle disabledStyle = new GUIStyle(GUI.skin.button);
         disabledStyle.normal.textColor = Color.gray;
-
         string constructTextButton = "Optimize Text";
 
         // Title
@@ -53,7 +52,7 @@ public class BezelUnityBridgeSettingsEditor : Editor
         EditorPrefs.SetString(BezelUnityBridgeImporter.BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY, accessToken);
         EditorGUILayout.EndHorizontal();
         
-        settings.setSyncKey(EditorGUILayout.TextField("Step 2: Sync Key", settings.getSyncKey(), GUILayout.ExpandWidth(true)));
+        settings.setFileLink(EditorGUILayout.TextField("Step 2: File Link", settings.getFileLink(), GUILayout.ExpandWidth(true)));
 
         settings.setFileDirectory(EditorGUILayout.TextField("Step 3: Unity File Directory", settings.getFileDirectory(), GUILayout.ExpandWidth(true)));
 

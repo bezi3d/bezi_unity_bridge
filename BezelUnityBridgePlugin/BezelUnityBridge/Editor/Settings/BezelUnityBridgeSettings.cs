@@ -4,8 +4,10 @@ namespace Bezel.Bridge.Editor.Settings
 {
 	public class BezelUnityBridgeSettings : ScriptableObject
 	{
-        [Tooltip("The Bezel Sync Key")]
-        public string SyncKey = "";
+        [Tooltip("The Bezel File Link")]
+        public string FileLink = "";
+
+        private string SyncKey = "";
 
         [Tooltip("The Unity Project Folder")]
         public string FileDirectory = "Assets/BezelFiles/";
@@ -17,6 +19,16 @@ namespace Bezel.Bridge.Editor.Settings
         public string BezelFileURL = "";
 
         private bool devMode = false;
+
+        public string getFileLink()
+        {
+            return FileLink;
+        }
+
+        public void setFileLink(string newValue)
+        {
+            FileLink = newValue;
+        }
 
         public string getSyncKey() {
             return SyncKey;

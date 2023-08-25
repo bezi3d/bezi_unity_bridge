@@ -44,7 +44,7 @@ namespace Bezel.Bridge.Editor.Settings
             var requirementsMet = CheckRequirements();
             if (requirementsMet)
             {
-                bool result = await ImportBezelFile(s_BezelUnityBridgeSettings.SyncKey);
+                bool result = await ImportBezelFile(s_BezelUnityBridgeSettings.FileLink);
                 //Trigger importing glTF after downloading 
                 if (result)
                 {
@@ -68,7 +68,7 @@ namespace Bezel.Bridge.Editor.Settings
 
                 AssetDatabase.ImportAsset(downloadFilePath);
 
-                EditorUtility.DisplayDialog("Import Success", "Go to folder "+ s_BezelUnityBridgeSettings.FileDirectory + ", and drag the file " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.SyncKey) + " into Hierarchy", "Okay");
+                EditorUtility.DisplayDialog("Import Success", "Go to folder "+ s_BezelUnityBridgeSettings.FileDirectory + ", and drag the file " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey()) + " into Hierarchy", "Okay");
             }
             else
             {
@@ -126,15 +126,15 @@ namespace Bezel.Bridge.Editor.Settings
                 }
             }
 
-            if (s_BezelUnityBridgeSettings.SyncKey.Length == 0)
+            if (s_BezelUnityBridgeSettings.getFileLink().Length == 0)
             {
-                EditorUtility.DisplayDialog("Step 2: Enter Bezel Sync Key", "After Step 1 (access token), sync key can be generated for each Bezel file under Share panel.", "Enter Sync Key");
+                EditorUtility.DisplayDialog("Step 2: Enter Bezel File Link", "After Step 1 (access token), file link can be copied for each Bezel file under Share panel.", "Enter File Link");
                 return false;
             }
 
             if (!Directory.Exists(s_BezelUnityBridgeSettings.FileDirectory))
             {
-                EditorUtility.DisplayDialog("Step 3: Setup Unity File Path", "After Step 2 (sync key), the imported file will be saved at: " +
+                EditorUtility.DisplayDialog("Step 3: Setup Unity File Path", "After Step 2 (file link), the imported file will be saved at: " +
                                             s_BezelUnityBridgeSettings.FileDirectory + ". You can change the path as well.", "Create Folder");
                 Directory.CreateDirectory(s_BezelUnityBridgeSettings.FileDirectory);
 
@@ -161,13 +161,15 @@ namespace Bezel.Bridge.Editor.Settings
 
         }
 
-        private static async Task<bool> ImportBezelFile(string _syncKey)
+        private static async Task<bool> ImportBezelFile(string _fileLink)
         {
             EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", "Downloading file to " + s_BezelUnityBridgeSettings.FileDirectory, 0);
 
+            s_BezelUnityBridgeSettings.setSyncKey(convertFileLinkToSyncKey(_fileLink));
+
             try
             {
-                await GetBezelFile(_syncKey);
+                await GetBezelFile(s_BezelUnityBridgeSettings.getSyncKey());
             }
             catch (Exception e)
             {
@@ -179,6 +181,16 @@ namespace Bezel.Bridge.Editor.Settings
             EditorUtility.ClearProgressBar();
 
             return true;
+        }
+
+        private static string convertFileLinkToSyncKey(string fileLink)
+        {
+            string _syncKey;
+
+            var parts = fileLink.Split('/');
+            _syncKey = parts[parts.Length - 1];
+
+            return _syncKey;
         }
 
         public static async Task<String> GetBezelFile(string syncKey)
@@ -208,7 +220,7 @@ namespace Bezel.Bridge.Editor.Settings
                 else
                 {
                     EditorUtility.ClearProgressBar();
-                    EditorUtility.DisplayDialog("Import Error", "Access token or sync key may be invalid. Please try copy both strings again. ", "STOP");
+                    EditorUtility.DisplayDialog("Import Error", "Access token or file link may be invalid. Please try copy both strings again. ", "STOP");
                 }
             }
             catch
@@ -221,7 +233,7 @@ namespace Bezel.Bridge.Editor.Settings
 
         public static async Task<String> DownloadLargeFileCoroutine(string s3Path)
         {
-            string savePath = s_BezelUnityBridgeSettings.FileDirectory + fileNameFromSyncKey(s_BezelUnityBridgeSettings.SyncKey);
+            string savePath = s_BezelUnityBridgeSettings.FileDirectory + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey());
 
             UnityWebRequest webRequest = UnityWebRequest.Get(s3Path);
 
