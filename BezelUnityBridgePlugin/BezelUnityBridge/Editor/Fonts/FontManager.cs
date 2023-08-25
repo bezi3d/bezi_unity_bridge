@@ -52,9 +52,10 @@ namespace Bezel.Bridge.Editor.Fonts
     /// </summary>
     public static class FontManager
     {
+        private static BezelFontMap fontMap;
+
         public static async Task<BezelFontMap> GenerateFontMapForDocument(string _fontFamily, int _fontWeight, bool enableGoogleFontsDownload)
         {
-            // Todo: This should be initialized before this call.
             BezelFontMap fontMap = new BezelFontMap();
 
             var allProjectFontAssets = AssetDatabase.FindAssets($"t:TMP_FontAsset").Select(guid => AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(AssetDatabase.GUIDToAssetPath(guid))).ToList();
@@ -76,8 +77,8 @@ namespace Bezel.Bridge.Editor.Fonts
             }
             else if (enableGoogleFontsDownload && GoogleFontLibraryManager.CheckFontAvailableForDownload(fontFamily, fontWeight))
             {
-                var downloadTask = await GoogleFontLibraryManager.ImportFont(fontFamily, fontWeight);
-                //await downloadTask;
+                bool downloadTask = await GoogleFontLibraryManager.ImportFont(fontFamily, fontWeight);
+
                 if (downloadTask)
                 {
                     // Success
@@ -88,10 +89,8 @@ namespace Bezel.Bridge.Editor.Fonts
             if (newFontMapEntry.FontAsset == null)
                 newFontMapEntry.FontAsset = GetClosestFont(allProjectFontAssets,fontFamily, fontWeight);
                 
-                
             // TODO - We might want to handle generation of material variations here too
             
-
             return fontMap;
         }
         
