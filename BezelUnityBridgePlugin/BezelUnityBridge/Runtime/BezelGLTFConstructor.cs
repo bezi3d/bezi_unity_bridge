@@ -22,7 +22,6 @@ namespace Bezel.Bridge
 
         public static void ObjectsContructor(GameObject gameObject, object objectItem)
         {
-            //Debug.Log("======= Start ObjectsContructor");
             ClearImportObjects();
 
             if (!DecodeBezelGLTFExtras(gameObject, objectItem)) return;
@@ -34,7 +33,6 @@ namespace Bezel.Bridge
             AttachBezelBehavior();
 
             AttachBezelText();
-            //Debug.Log("======= Finish ObjectsContructor");
         }
 
         private static void ClearImportObjects() {

@@ -39,26 +39,25 @@ namespace Bezel.Bridge.Editor.Settings
             Selection.activeObject = bridgeSettings;
         }
 
-        public static async Task<bool> ImportFromSyncKey()
+        public static async void ImportFromSyncKey()
         {
             var requirementsMet = CheckRequirements();
             if (requirementsMet)
             {
                 bool result = await ImportBezelFile(s_BezelUnityBridgeSettings.SyncKey);
                 //Trigger importing glTF after downloading 
-                if (result) {
+                if (result)
+                {
                     AssetDatabase.ImportAsset(downloadFilePath);
 
                     importedGameObject = (GameObject)AssetDatabase.LoadAssetAtPath(downloadFilePath, typeof(GameObject));
 
-                    if (EditorUtility.DisplayDialog("Import Ready", "Click Next Button to Optimize Text", "Okay")) {
-                    }
+                    EditorUtility.DisplayDialog("Import Ready", "Click Next Button to Optimize Text", "Okay");
                 }
-
-                return true;
+                else {
+                    EditorUtility.DisplayDialog("Import Error", "Encounter import issue.", "STOP");
+                }
             }
-
-            return false;
         }
 
         public static void ConstructText()
@@ -69,7 +68,7 @@ namespace Bezel.Bridge.Editor.Settings
 
                 AssetDatabase.ImportAsset(downloadFilePath);
 
-                EditorUtility.DisplayDialog("Import Success", "Drag " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.SyncKey) + " from " + s_BezelUnityBridgeSettings.FileDirectory + " into Hierarchy", "Okay");
+                EditorUtility.DisplayDialog("Import Success", "Go to folder "+ s_BezelUnityBridgeSettings.FileDirectory + ", and drag the file " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.SyncKey) + " into Hierarchy", "Okay");
             }
             else
             {

@@ -24,10 +24,16 @@ public class BezelUnityBridgeSettingsEditor : Editor
     {
         // Initialization
         BezelUnityBridgeSettings settings = target as BezelUnityBridgeSettings;
+
         GUIStyle titleStyle = new GUIStyle(GUI.skin.label);
         titleStyle.fontStyle = FontStyle.Bold;
         titleStyle.fontSize = 20;
-        
+
+        GUIStyle disabledStyle = new GUIStyle(GUI.skin.button);
+        disabledStyle.normal.textColor = Color.gray;
+
+        string constructTextButton = "Optimize Text";
+
         // Title
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label(bezelLogo, GUILayout.Width(64), GUILayout.Height(64));
@@ -63,19 +69,22 @@ public class BezelUnityBridgeSettingsEditor : Editor
 
 #endif
         // Import
-        EditorGUILayout.LabelField("Import", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Import and Optimize", EditorStyles.boldLabel);
 
-        if (GUILayout.Button("Import Bezel file into Unity"))
+        if (GUILayout.Button("Import Bezel file"))
         {
             BezelUnityBridgeImporter.ImportFromSyncKey();
         }
 
-        if(BezelUnityBridgeImporter.importedGameObject)
+        if (BezelUnityBridgeImporter.importedGameObject)
         {
-            if (GUILayout.Button("Continue Optimizing Text"))
+            if (GUILayout.Button(constructTextButton))
             {
                 BezelUnityBridgeImporter.ConstructText();
             }
+        }
+        else {
+            GUILayout.Button(constructTextButton, disabledStyle);
         }
 
         EditorGUILayout.Separator();
