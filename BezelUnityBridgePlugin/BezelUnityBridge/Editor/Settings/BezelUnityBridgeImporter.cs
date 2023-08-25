@@ -39,7 +39,7 @@ namespace Bezel.Bridge.Editor.Settings
             Selection.activeObject = bridgeSettings;
         }
 
-        public static async void ImportFromSyncKey()
+        public static async Task<bool> ImportFromSyncKey()
         {
             var requirementsMet = CheckRequirements();
             if (requirementsMet)
@@ -50,23 +50,31 @@ namespace Bezel.Bridge.Editor.Settings
                     AssetDatabase.ImportAsset(downloadFilePath);
 
                     importedGameObject = (GameObject)AssetDatabase.LoadAssetAtPath(downloadFilePath, typeof(GameObject));
+
+                    if (EditorUtility.DisplayDialog("Import Ready", "Click Next Button to Optimize Text", "Okay")) {
+                    }
                 }
 
-                if (importedGameObject != null)
-                {
-                    EditorUtility.DisplayDialog("Import Success", "Drag " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.SyncKey) + " from " + s_BezelUnityBridgeSettings.FileDirectory + " into Hierarchy", "Okay");
-                }
-                else {
-                    EditorUtility.DisplayDialog("Import Error", "Encounter import issue.", "STOP");
-                }
+                return true;
             }
+
+            return false;
         }
 
-        [MenuItem("Bezel Bridge/Set Personal Access Token", true)]
-        static bool ValidateSetPersonalAccessToken()
+        public static void ConstructText()
         {
-            // Return true if the menu item should be enabled, false if it should be disabled
-            return true;
+            if (importedGameObject != null)
+            {
+                AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+                AssetDatabase.ImportAsset(downloadFilePath);
+
+                EditorUtility.DisplayDialog("Import Success", "Drag " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.SyncKey) + " from " + s_BezelUnityBridgeSettings.FileDirectory + " into Hierarchy", "Okay");
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Import Error", "Encounter import issue.", "STOP");
+            }
         }
 
         public static bool RequestPersonalAccessToken()
@@ -204,7 +212,7 @@ namespace Bezel.Bridge.Editor.Settings
                     EditorUtility.DisplayDialog("Import Error", "Access token or sync key may be invalid. Please try copy both strings again. ", "STOP");
                 }
             }
-            catch (Exception e)
+            catch
             {
                 EditorUtility.ClearProgressBar();
             }

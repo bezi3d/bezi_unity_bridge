@@ -194,13 +194,7 @@ namespace Bezel.Bridge
                     if (firstValid == 0)
                     {
                         bezelobject.transform.gameObject.AddComponent<BezelText>();
-                        //bezelobject.transform.gameObject.AddComponent<MeshRenderer>();
-                        //bezelobject.transform.gameObject.AddComponent<TextMeshPro>();
-
-                        //Debug.Log("Before SetTextParameters");
                         System.Threading.Tasks.Task<bool> task = bezelobject.transform.gameObject.GetComponent<BezelText>().SetTextParameters(bezelobject.parameters);
-
-                        //Debug.Log("After SetTextParameters");
                     }
 
                     // Remove custom text offset after alignment setting changed.
@@ -213,7 +207,6 @@ namespace Bezel.Bridge
                     if (firstValid == 3) { firstValid = 0; }
 
                 }
-
             }
         }
     }

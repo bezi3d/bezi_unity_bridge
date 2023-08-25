@@ -3,6 +3,7 @@
 using UnityEngine;
 using UnityEditor;
 using Bezel.Bridge.Editor.Settings;
+using UnityEditor.Callbacks;
 
 [CustomEditor(typeof(BezelUnityBridgeSettings))]
 public class BezelUnityBridgeSettingsEditor : Editor
@@ -69,10 +70,17 @@ public class BezelUnityBridgeSettingsEditor : Editor
             BezelUnityBridgeImporter.ImportFromSyncKey();
         }
 
+        if(BezelUnityBridgeImporter.importedGameObject)
+        {
+            if (GUILayout.Button("Continue Optimizing Text"))
+            {
+                BezelUnityBridgeImporter.ConstructText();
+            }
+        }
+
         EditorGUILayout.Separator();
 
         // Reference
-        // if (!settings.getImportSuccessStatus()) return;
         if(settings.getBezelFileURL() == "") return;
 
         EditorGUILayout.LabelField("Reference", EditorStyles.boldLabel);
