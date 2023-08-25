@@ -27,6 +27,11 @@ namespace Bezel.Bridge
 
             TextMeshPro text = this.gameObject.GetComponent<TextMeshPro>();
 
+
+
+
+
+
             text.text = parameters.text;
             text.fontSize = parameters.fontSize;
             text.color = convertColorCode(parameters.color);
@@ -68,11 +73,21 @@ namespace Bezel.Bridge
                 _ => 0
             };
 
+
+
+
+
+
             // Generate font map
             BezelFontMap fontMap = await GenerateFontMap();
 
+            //System.Threading.Tasks.Task<BezelFontMap> task = GenerateFontMap();
+            //BezelFontMap fontMap = task.Result;
+
             // Get font map
             BezelFontMapEntry matchingFontMapping = fontMap.GetFontMapping(parameters.fontFamily, 400);
+
+            //Debug.Log(" ======= before matchingFontMapping.FontAsset! text: " + text + "|matchingFontMapping: "+ matchingFontMapping);
 
             try
             {
@@ -85,6 +100,9 @@ namespace Bezel.Bridge
                 Debug.LogWarning("Ignoring NullRef due to TMP error");
             }
 
+            //Debug.Log(" ======= after matchingFontMapping.FontAsset!");
+
+
             var effectMaterialPreset = GetEffectMaterialPreset(matchingFontMapping);
             text.fontMaterial = effectMaterialPreset;
 
@@ -93,7 +111,12 @@ namespace Bezel.Bridge
 
         private async Task<BezelFontMap> GenerateFontMap()
         {
-            BezelFontMap fontMap = await FontManager.GenerateFontMapForDocument(parameters.fontFamily, 400, true);
+            // Generate font mapping data
+            var bezelFontMapTask = FontManager.GenerateFontMapForDocument(parameters.fontFamily, 400, true);
+
+            await bezelFontMapTask;
+
+            var fontMap = bezelFontMapTask.Result;
 
             return fontMap;
         }

@@ -22,6 +22,7 @@ namespace Bezel.Bridge
 
         public static void ObjectsContructor(GameObject gameObject, object objectItem)
         {
+            //Debug.Log("======= Start ObjectsContructor");
             ClearImportObjects();
 
             if (!DecodeBezelGLTFExtras(gameObject, objectItem)) return;
@@ -33,6 +34,7 @@ namespace Bezel.Bridge
             AttachBezelBehavior();
 
             AttachBezelText();
+            //Debug.Log("======= Finish ObjectsContructor");
         }
 
         private static void ClearImportObjects() {
@@ -192,7 +194,13 @@ namespace Bezel.Bridge
                     if (firstValid == 0)
                     {
                         bezelobject.transform.gameObject.AddComponent<BezelText>();
+                        //bezelobject.transform.gameObject.AddComponent<MeshRenderer>();
+                        //bezelobject.transform.gameObject.AddComponent<TextMeshPro>();
+
+                        //Debug.Log("Before SetTextParameters");
                         System.Threading.Tasks.Task<bool> task = bezelobject.transform.gameObject.GetComponent<BezelText>().SetTextParameters(bezelobject.parameters);
+
+                        //Debug.Log("After SetTextParameters");
                     }
 
                     // Remove custom text offset after alignment setting changed.
@@ -205,6 +213,7 @@ namespace Bezel.Bridge
                     if (firstValid == 3) { firstValid = 0; }
 
                 }
+
             }
         }
     }

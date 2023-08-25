@@ -14,6 +14,8 @@ namespace Bezel.Bridge
         {
             // new implementation here
             object objectItem = extras;
+            // Debug.Log("Received extras: " + objectItem.ToString());
+            
 
             BezelGLTFConstructor.ObjectsContructor(importedObject, objectItem);
         }

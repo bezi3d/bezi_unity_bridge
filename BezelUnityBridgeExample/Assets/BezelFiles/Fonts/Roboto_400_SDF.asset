@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!28 &-498711506067733855
+--- !u!28 &-1013176075763228063
 Texture2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Name: Roboto_400_SDF
   m_EditorClassIdentifier: 
   hashCode: 794451406
-  material: {fileID: 6713605231777002686}
+  material: {fileID: 2956839522703117922}
   materialHashCode: 1261366062
   m_Version: 1.1.0
   m_SourceFontFileGUID: 1326ae91a6a744f6d98441a0d5cb24ef
@@ -1955,7 +1955,7 @@ MonoBehaviour:
     m_GlyphIndex: 183
     m_Scale: 1
   m_AtlasTextures:
-  - {fileID: -498711506067733855}
+  - {fileID: -1013176075763228063}
   m_AtlasTextureIndex: 0
   m_IsMultiAtlasTexturesEnabled: 1
   m_ClearDynamicDataOnBuild: 0
@@ -2780,7 +2780,7 @@ MonoBehaviour:
   boldSpacing: 7
   italicStyle: 35
   tabSize: 10
---- !u!21 &6713605231777002686
+--- !u!21 &2956839522703117922
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -2804,7 +2804,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: -498711506067733855}
+        m_Texture: {fileID: -1013176075763228063}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
