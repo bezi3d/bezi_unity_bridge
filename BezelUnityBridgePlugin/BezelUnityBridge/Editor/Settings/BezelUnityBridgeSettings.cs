@@ -10,7 +10,7 @@ namespace Bezel.Bridge.Editor.Settings
         private string SyncKey = "";
 
         [Tooltip("The Unity Project Folder")]
-        public string FileDirectory = "Assets/BezelFiles/";
+        private string FileDirectory = "Assets/BezelFiles/";
 
         public string FontsFolderName = "Fonts";
 

@@ -68,7 +68,7 @@ namespace Bezel.Bridge.Editor.Settings
 
                 AssetDatabase.ImportAsset(downloadFilePath);
 
-                EditorUtility.DisplayDialog("Import Success", "Go to folder "+ s_BezelUnityBridgeSettings.FileDirectory + ", and drag the file " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey()) + " into Hierarchy", "Okay");
+                EditorUtility.DisplayDialog("Import Success", "Go to folder "+ s_BezelUnityBridgeSettings.getFileDirectory() + ", and drag the file " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey()) + " into Hierarchy", "Okay");
             }
             else
             {
@@ -132,11 +132,11 @@ namespace Bezel.Bridge.Editor.Settings
                 return false;
             }
 
-            if (!Directory.Exists(s_BezelUnityBridgeSettings.FileDirectory))
+            if (!Directory.Exists(s_BezelUnityBridgeSettings.getFileDirectory()))
             {
                 EditorUtility.DisplayDialog("Step 3: Setup Unity File Path", "After Step 2 (file link), the imported file will be saved at: " +
-                                            s_BezelUnityBridgeSettings.FileDirectory + ". You can change the path as well.", "Create Folder");
-                Directory.CreateDirectory(s_BezelUnityBridgeSettings.FileDirectory);
+                                            s_BezelUnityBridgeSettings.getFileDirectory() + ". You can change the path as well.", "Create Folder");
+                Directory.CreateDirectory(s_BezelUnityBridgeSettings.getFileDirectory());
 
                 Directory.CreateDirectory(GetFontsFolder());
 
@@ -163,7 +163,7 @@ namespace Bezel.Bridge.Editor.Settings
 
         private static async Task<bool> ImportBezelFile(string _fileLink)
         {
-            EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", "Downloading file to " + s_BezelUnityBridgeSettings.FileDirectory, 0);
+            EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", "Downloading file to " + s_BezelUnityBridgeSettings.getFileDirectory(), 0);
 
             s_BezelUnityBridgeSettings.setSyncKey(convertFileLinkToSyncKey(_fileLink));
 
@@ -233,7 +233,7 @@ namespace Bezel.Bridge.Editor.Settings
 
         public static async Task<String> DownloadLargeFileCoroutine(string s3Path)
         {
-            string savePath = s_BezelUnityBridgeSettings.FileDirectory + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey());
+            string savePath = s_BezelUnityBridgeSettings.getFileDirectory() + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey());
 
             UnityWebRequest webRequest = UnityWebRequest.Get(s3Path);
 
@@ -265,6 +265,11 @@ namespace Bezel.Bridge.Editor.Settings
             return savePath;
         }
 
+        public static string getBezelFolder()
+        {
+            return s_BezelUnityBridgeSettings.getFileDirectory();
+        }
+
         public static string GetFontsFolder()
         {
             if (s_BezelUnityBridgeSettings == null)
@@ -272,7 +277,7 @@ namespace Bezel.Bridge.Editor.Settings
                 s_BezelUnityBridgeSettings = BezelUnityBridgeSettingsProvider.FindUnityBridgeSettingsAsset();
             }
 
-            return s_BezelUnityBridgeSettings.FileDirectory +"/"+s_BezelUnityBridgeSettings.FontsFolderName;
+            return s_BezelUnityBridgeSettings.getFileDirectory() + "/"+s_BezelUnityBridgeSettings.FontsFolderName;
         }
 
         public static string GetFontMaterialPresetsFolder()
@@ -282,14 +287,14 @@ namespace Bezel.Bridge.Editor.Settings
                 s_BezelUnityBridgeSettings = BezelUnityBridgeSettingsProvider.FindUnityBridgeSettingsAsset();
             }
 
-            return s_BezelUnityBridgeSettings.FileDirectory + "/" + s_BezelUnityBridgeSettings.FontMaterialPresetsFolderName;
+            return s_BezelUnityBridgeSettings.getFileDirectory() + "/" + s_BezelUnityBridgeSettings.FontMaterialPresetsFolderName;
         }
 
         private static async Task WaitForDownloadComplete(UnityWebRequest webRequest)
         {
             while(!webRequest.isDone)
             {
-                EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", "Downloading file to "+ s_BezelUnityBridgeSettings.FileDirectory, webRequest.downloadProgress);
+                EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", "Downloading file to "+ s_BezelUnityBridgeSettings.getFileDirectory(), webRequest.downloadProgress);
 
                 await Task.Yield();
             }

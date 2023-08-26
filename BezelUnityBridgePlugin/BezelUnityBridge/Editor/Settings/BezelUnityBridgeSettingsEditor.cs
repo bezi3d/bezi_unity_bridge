@@ -86,10 +86,18 @@ public class BezelUnityBridgeSettingsEditor : Editor
             GUILayout.Button(constructTextButton, disabledStyle);
         }
 
-        EditorGUILayout.Separator();
+        if (BezelUnityBridgeImporter.importedGameObject == null)
+        {
+            return;
+        }
+
+        EditorGUILayout.LabelField("Go to folder "+ BezelUnityBridgeImporter.getBezelFolder() + " to drag the imported file into Hierarchy. ");
+
 
         // Reference
-        if(settings.getBezelFileURL() == "") return;
+        if (settings.getBezelFileURL() == "") return;
+
+        EditorGUILayout.Separator();
 
         EditorGUILayout.LabelField("Reference", EditorStyles.boldLabel);
 
