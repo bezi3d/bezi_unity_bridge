@@ -116,11 +116,11 @@ namespace Bezel.Bridge
             float maxWidth = 1.0f;
             float maxHeight = 1.0f;
             float parsed;
-            if (p.maxWidth != null && float.TryParse(p.maxWidth.ToString(), out parsed))
+            if (p.width != null && float.TryParse(p.width.ToString(), out parsed))
             {
                 maxWidth = parsed;
             }
-            if (p.maxHeight != null && float.TryParse(p.maxHeight.ToString(), out parsed))
+            if (p.depth != null && float.TryParse(p.depth.ToString(), out parsed))
             {
                 maxHeight = parsed;
             }

@@ -81,8 +81,8 @@ namespace Bezel.Bridge
         public string lineHeight;
         public float letterSpacing;
         public float curveRadius;
-        public object maxWidth;
-        public object maxHeight;
+        public object width;
+        public object depth;
         public string color;
     }
 }
