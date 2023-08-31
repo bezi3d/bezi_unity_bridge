@@ -7,22 +7,44 @@ ScriptedImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-  script: {fileID: 11500000, guid: 3edef46df58ef4d52a42618fe971c29d, type: 3}
+  script: {fileID: 11500000, guid: 715df9372183c47e389bb6e19fbc3b52, type: 3}
+  editorImportSettings:
+    generateSecondaryUVSet: 0
   importSettings:
-    materials: 1
-    shaderOverrides:
-      metallic: {fileID: 4800000, guid: 3f3f8b89cb33744f89df7e1e3ee77a41, type: 3}
-      metallicBlend: {fileID: 4800000, guid: 65e5375c6286646389de6ee17faf7129, type: 3}
-      specular: {fileID: 4800000, guid: 69bb063644a63422788e5adeb79911f5, type: 3}
-      specularBlend: {fileID: 4800000, guid: bb30a0e35b6f44351a1604395ed3018b, type: 3}
-    animationSettings:
-      looping: 0
-      frameRate: 24
-      interpolationMode: -1
-      compressBlendShapeKeyFrames: 1
-      useLegacyClips: 0
-    generateLightmapUVs: 0
-    hardAngle: 88
-    angleError: 8
-    areaError: 15
-    packMargin: 4
+    nodeNameMethod: 1
+    animationMethod: 2
+    generateMipMaps: 1
+    defaultMinFilterMode: 9729
+    defaultMagFilterMode: 9729
+    anisotropicFilterLevel: 1
+  instantiationSettings:
+    mask: -1
+    layer: 0
+    skinUpdateWhenOffscreen: 1
+    lightIntensityFactor: 1
+    sceneObjectCreation: 2
+  assetDependencies: []
+  reportItems:
+  - type: 2
+    code: 20
+    messages:
+    - KHR_materials_volume
+  - type: 2
+    code: 20
+    messages:
+    - KHR_materials_ior
+  - type: 2
+    code: 19
+    messages: []
+  - type: 2
+    code: 19
+    messages: []
+  - type: 2
+    code: 30
+    messages: []
+  - type: 2
+    code: 30
+    messages: []
+  - type: 2
+    code: 30
+    messages: []
