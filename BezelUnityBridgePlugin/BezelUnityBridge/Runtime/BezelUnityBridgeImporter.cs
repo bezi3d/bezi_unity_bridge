@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace Bezel.Bridge.Editor.Settings
 
         public static string s_PersonalAccessToken;
         private static string downloadFilePath;
+        private static string bezelExtras;
 
         public static GameObject importedGameObject;
 
@@ -42,43 +44,35 @@ namespace Bezel.Bridge.Editor.Settings
         public static async void ImportFromSyncKey()
         {
             var requirementsMet = CheckRequirements();
-            if (requirementsMet)
+            if (!requirementsMet) return;
+
+            bool result = await ImportBezelFile(s_BezelUnityBridgeSettings.FileLink);
+
+            //Trigger importing glTF after downloading 
+            if (!result)
             {
-                bool result = await ImportBezelFile(s_BezelUnityBridgeSettings.FileLink);
-                //Trigger importing glTF after downloading 
-                if (result)
-                {
-                    AssetDatabase.ImportAsset(downloadFilePath);
-
-                    importedGameObject = (GameObject)AssetDatabase.LoadAssetAtPath(downloadFilePath, typeof(GameObject));
-
-                    EditorUtility.DisplayDialog("Import Ready", "Click next button to visual " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab from " + s_BezelUnityBridgeSettings.getFileDirectory() + " into Hierarchy", "Okay");
-                }
-                else {
-                    EditorUtility.DisplayDialog("Import Error", "Encounter import issue.", "STOP");
-                }
+                EditorUtility.DisplayDialog("Import Error", "Encounter import issue.", "STOP");
             }
+
+            // Import assets to show under Assets folder
+            AssetDatabase.ImportAsset(downloadFilePath);
+
+            importedGameObject = (GameObject)AssetDatabase.LoadAssetAtPath(downloadFilePath, typeof(GameObject));
+
+            EditorUtility.DisplayDialog("Import Ready", "Click next button to visual " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab from " + s_BezelUnityBridgeSettings.getFileDirectory() + " into Hierarchy", "Okay");
         }
 
         public static void ConstructBezelObject()
         {
             if (importedGameObject != null)
             {
- 
                 GameObject bezelPrefab = PrefabUtility.SaveAsPrefabAsset(importedGameObject, s_BezelUnityBridgeSettings.getFileDirectory() + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab");
 
-                bezelPrefab.transform.gameObject.AddComponent<BezelRoot>();
-                BezelRoot script = bezelPrefab.transform.gameObject.GetComponent<BezelRoot>();
-
-                // Todo: Pipe json data into properties
-                Debug.Log("script: " + script);
-                if (script)
-                {
-                    Debug.Log(script.rootObject);
-                }
+                BezelGLTFConstructor.ObjectsContructor(bezelPrefab, bezelExtras);
 
                 GameObject bezelPrefabInHierarchy = PrefabUtility.InstantiatePrefab(bezelPrefab) as GameObject;
 
+                // Todo: Add text support by reverse above order: InstantiatePrefab first, run construct, and then SaveAsPrefabAsset
 
                 // Position object
                 bezelPrefabInHierarchy.transform.position = new Vector3(0, 0, 0);
@@ -96,9 +90,9 @@ namespace Bezel.Bridge.Editor.Settings
         {
             if (importedGameObject != null)
             {
-                AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+                //AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
 
-                AssetDatabase.ImportAsset(downloadFilePath);
+                //AssetDatabase.ImportAsset(downloadFilePath);
 
                 EditorUtility.DisplayDialog("Import Success", "Go to folder "+ s_BezelUnityBridgeSettings.getFileDirectory() + ", and drag the file " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), true) + " into Hierarchy", "Okay");
             }
@@ -215,16 +209,7 @@ namespace Bezel.Bridge.Editor.Settings
             return true;
         }
 
-        private static string convertFileLinkToSyncKey(string fileLink)
-        {
-            string _syncKey;
-
-            var parts = fileLink.Split('/');
-            _syncKey = parts[parts.Length - 1];
-
-            return _syncKey;
-        }
-
+        
         public static async Task<String> GetBezelFile(string syncKey)
         {
             string apiPath = bezelAPIUrl + BEZEL_SYNC_KEY_NAME + "=" + syncKey + "&" +
@@ -247,7 +232,7 @@ namespace Bezel.Bridge.Editor.Settings
 
                     s_BezelUnityBridgeSettings.setBezelFileURL(result.bezelUrl);
 
-                    downloadFilePath = await DownloadLargeFileCoroutine(result.download);
+                    await DownloadLargeFileCoroutine(result.download);
                 }
                 else
                 {
@@ -263,7 +248,7 @@ namespace Bezel.Bridge.Editor.Settings
             return api_response;
         }
 
-        public static async Task<String> DownloadLargeFileCoroutine(string s3Path)
+        public static async Task<bool> DownloadLargeFileCoroutine(string s3Path)
         {
             string savePath = s_BezelUnityBridgeSettings.getFileDirectory() + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), true);
 
@@ -281,21 +266,32 @@ namespace Bezel.Bridge.Editor.Settings
                     byte[] data = webRequest.downloadHandler.data;
 
                     // Read json to get bezel_objects
-
                     // Convert to string 
-                    string json = System.Text.Encoding.UTF8.GetString(data);
-                    //BezelObjects data = JsonUtility.FromJson<BezelObjects>(json);
+                    string jsonString = System.Text.Encoding.UTF8.GetString(data);
 
-                    // Access extras
-                    //var extras = data.extras;
+                    GLTFSchema json = JsonConvert.DeserializeObject<GLTFSchema>(jsonString);
 
+                    if (json.extras == null)
+                    {
+                        Debug.Log("No valid bezel extras");
+                        return false;
+                    }
+
+                    bezelExtras = json.extras.ToString();
+
+                    byte[] dataBezelObjects = System.Text.Encoding.UTF8.GetBytes(bezelExtras);
+
+                    System.IO.File.WriteAllBytes(s_BezelUnityBridgeSettings.getFileDirectory() + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".json", dataBezelObjects);
+                    
                     System.IO.File.WriteAllBytes(savePath, data);
-                    // Debug.Log("File downloaded successfully.");
+
+                    downloadFilePath = savePath;
                 }
                 else
                 {
                     Debug.LogError("File download failed. Error: " + webRequest.error);
                     EditorUtility.ClearProgressBar();
+                    return false;
                 }
             }
             catch (Exception e)
@@ -304,7 +300,7 @@ namespace Bezel.Bridge.Editor.Settings
                 Debug.LogError("Error downloading Bezel file:" + e.ToString());
             }
 
-            return savePath;
+            return true;
         }
 
         public static string getBezelFolder()
@@ -340,6 +336,16 @@ namespace Bezel.Bridge.Editor.Settings
 
                 await Task.Yield();
             }
+        }
+
+        private static string convertFileLinkToSyncKey(string fileLink)
+        {
+            string _syncKey;
+
+            var parts = fileLink.Split('/');
+            _syncKey = parts[parts.Length - 1];
+
+            return _syncKey;
         }
 
         private static string fileNameFromSyncKey(string key, bool withExtension)

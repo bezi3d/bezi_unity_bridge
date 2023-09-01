@@ -6,6 +6,12 @@ using UnityEngine;
 namespace Bezel.Bridge
 {
     [System.Serializable]
+    public class GLTFSchema
+    {
+        public object extras;
+    }
+
+    [System.Serializable]
     public class BezelObjects
     {
         public List<BezelObject> bezel_objects;
