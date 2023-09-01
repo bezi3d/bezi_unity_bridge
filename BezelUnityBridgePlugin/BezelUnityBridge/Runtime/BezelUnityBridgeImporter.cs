@@ -52,11 +52,43 @@ namespace Bezel.Bridge.Editor.Settings
 
                     importedGameObject = (GameObject)AssetDatabase.LoadAssetAtPath(downloadFilePath, typeof(GameObject));
 
-                    EditorUtility.DisplayDialog("Import Ready", "Click Next Button to Optimize Text", "Okay");
+                    EditorUtility.DisplayDialog("Import Ready", "Click next button to visual " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab from " + s_BezelUnityBridgeSettings.getFileDirectory() + " into Hierarchy", "Okay");
                 }
                 else {
                     EditorUtility.DisplayDialog("Import Error", "Encounter import issue.", "STOP");
                 }
+            }
+        }
+
+        public static void ConstructBezelObject()
+        {
+            if (importedGameObject != null)
+            {
+ 
+                GameObject bezelPrefab = PrefabUtility.SaveAsPrefabAsset(importedGameObject, s_BezelUnityBridgeSettings.getFileDirectory() + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab");
+
+                bezelPrefab.transform.gameObject.AddComponent<BezelRoot>();
+                BezelRoot script = bezelPrefab.transform.gameObject.GetComponent<BezelRoot>();
+
+                // Todo: Pipe json data into properties
+                Debug.Log("script: " + script);
+                if (script)
+                {
+                    Debug.Log(script.rootObject);
+                }
+
+                GameObject bezelPrefabInHierarchy = PrefabUtility.InstantiatePrefab(bezelPrefab) as GameObject;
+
+
+                // Position object
+                bezelPrefabInHierarchy.transform.position = new Vector3(0, 0, 0);
+
+
+                EditorUtility.DisplayDialog("Import Success", fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab is in Hierarchy", "Okay");
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Import Error", "Encounter import issue.", "STOP");
             }
         }
 
@@ -68,7 +100,7 @@ namespace Bezel.Bridge.Editor.Settings
 
                 AssetDatabase.ImportAsset(downloadFilePath);
 
-                EditorUtility.DisplayDialog("Import Success", "Go to folder "+ s_BezelUnityBridgeSettings.getFileDirectory() + ", and drag the file " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey()) + " into Hierarchy", "Okay");
+                EditorUtility.DisplayDialog("Import Success", "Go to folder "+ s_BezelUnityBridgeSettings.getFileDirectory() + ", and drag the file " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), true) + " into Hierarchy", "Okay");
             }
             else
             {
@@ -233,7 +265,7 @@ namespace Bezel.Bridge.Editor.Settings
 
         public static async Task<String> DownloadLargeFileCoroutine(string s3Path)
         {
-            string savePath = s_BezelUnityBridgeSettings.getFileDirectory() + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey());
+            string savePath = s_BezelUnityBridgeSettings.getFileDirectory() + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), true);
 
             UnityWebRequest webRequest = UnityWebRequest.Get(s3Path);
 
@@ -247,6 +279,16 @@ namespace Bezel.Bridge.Editor.Settings
                 if (webRequest.result == UnityWebRequest.Result.Success)
                 {
                     byte[] data = webRequest.downloadHandler.data;
+
+                    // Read json to get bezel_objects
+
+                    // Convert to string 
+                    string json = System.Text.Encoding.UTF8.GetString(data);
+                    //BezelObjects data = JsonUtility.FromJson<BezelObjects>(json);
+
+                    // Access extras
+                    //var extras = data.extras;
+
                     System.IO.File.WriteAllBytes(savePath, data);
                     // Debug.Log("File downloaded successfully.");
                 }
@@ -300,12 +342,12 @@ namespace Bezel.Bridge.Editor.Settings
             }
         }
 
-        private static string fileNameFromSyncKey(string key)
+        private static string fileNameFromSyncKey(string key, bool withExtension)
         {
             string file_name = "bezel";
             string extension = ".gltf";
 
-            file_name = key.Substring(0, key.IndexOf("-")) + extension;
+            file_name = key.Substring(0, key.IndexOf("-")) + ((withExtension)?extension:"");
 
             return file_name;
         }

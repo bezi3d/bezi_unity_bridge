@@ -31,7 +31,8 @@ public class BezelUnityBridgeSettingsEditor : Editor
 
         GUIStyle disabledStyle = new GUIStyle(GUI.skin.button);
         disabledStyle.normal.textColor = Color.gray;
-        string constructTextButton = "Optimize Text";
+        string constructBezelButton = "Bring Bezel Scene in Hierarchy";
+        string constructTextButton = "Import Text Assets";
 
         // Title
         EditorGUILayout.BeginHorizontal();
@@ -73,6 +74,18 @@ public class BezelUnityBridgeSettingsEditor : Editor
         if (GUILayout.Button("Import Bezel file"))
         {
             BezelUnityBridgeImporter.ImportFromSyncKey();
+        }
+
+        if (BezelUnityBridgeImporter.importedGameObject)
+        {
+            if (GUILayout.Button(constructBezelButton))
+            {
+                BezelUnityBridgeImporter.ConstructBezelObject();
+            }
+        }
+        else
+        {
+            GUILayout.Button(constructBezelButton, disabledStyle);
         }
 
         if (BezelUnityBridgeImporter.importedGameObject)
