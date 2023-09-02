@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Text;
 using Bezel.Bridge.Editor.Utils;
+using static UnityEditor.Progress;
 
 #pragma warning disable CS4014 // webRequest.SendWebRequest() is not awaited intentionally
 
@@ -66,17 +67,21 @@ namespace Bezel.Bridge.Editor.Settings
         {
             if (importedGameObject != null)
             {
-                GameObject bezelPrefab = PrefabUtility.SaveAsPrefabAsset(importedGameObject, s_BezelUnityBridgeSettings.getFileDirectory() + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab");
+                GameObject bezelPrefabTemp = PrefabUtility.InstantiatePrefab(importedGameObject) as GameObject;
 
-                BezelGLTFConstructor.ObjectsContructor(bezelPrefab, bezelExtras);
+                // Open up prefab to add componenet
+                PrefabUtility.UnpackPrefabInstance(bezelPrefabTemp, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
 
-                GameObject bezelPrefabInHierarchy = PrefabUtility.InstantiatePrefab(bezelPrefab) as GameObject;
+                BezelGLTFConstructor.ObjectsContructor(bezelPrefabTemp, bezelExtras);
 
-                // Todo: Add text support by reverse above order: InstantiatePrefab first, run construct, and then SaveAsPrefabAsset
+                GameObject bezelPrefabModified = PrefabUtility.SaveAsPrefabAsset(bezelPrefabTemp, s_BezelUnityBridgeSettings.getFileDirectory() + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab");
 
-                // Position object
+                GameObject bezelPrefabInHierarchy = PrefabUtility.InstantiatePrefab(bezelPrefabModified) as GameObject;
+
                 bezelPrefabInHierarchy.transform.position = new Vector3(0, 0, 0);
 
+                // Remove temporary prefab
+                GameObject.DestroyImmediate(bezelPrefabTemp);
 
                 EditorUtility.DisplayDialog("Import Success", fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab is in Hierarchy", "Okay");
             }
