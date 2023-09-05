@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEditor;
 using UnityEngine;
-using TMPro;
-
-//using Bezel.Bridge.Editor.Fonts;
+using Bezel.Bridge.Editor.Fonts;
+using System.Threading.Tasks;
 
 namespace Bezel.Bridge
 {
@@ -16,9 +13,33 @@ namespace Bezel.Bridge
         private static List<Transform> nodeObjects = new List<Transform>();
         private static Dictionary<string, int> bezelIdsLookup = new Dictionary<string, int>();
 
-        // 1. Decode bezel extras into Unity C# format for later access.
-        // 2. Store imported object transforms for later reference.
-        // 3. Insert parameters and reference by mapping bezel data into imported objects 
+        public static async Task<bool> PreparBezelTextResources(object objectItem)
+        {
+            BezelObjects bezelObjects;
+
+            try
+            {
+                bezelObjects = JsonConvert.DeserializeObject<BezelObjects>(objectItem.ToString());
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Fail to decode Bezel behavior json, likely schema mismatch from BezelSceneGraph.c. An error occurred: " + e.Message);
+                return false;
+            }
+
+            FontManager.Reset(); 
+
+            foreach (var bezelobject in bezelObjects.bezel_objects)
+            {
+                if (bezelobject.type == "Text")
+                {
+                    // Generate font map
+                    await GenerateFontMap(bezelobject.parameters.fontFamily, bezelobject.parameters.fontWeight);
+                }
+            }
+
+            return true;
+        }
 
         public static void ObjectsContructor(GameObject gameObject, object objectItem)
         {
@@ -28,7 +49,7 @@ namespace Bezel.Bridge
 
             if (!StoreImportedObjectTransform(gameObject)) return;
 
-            if (!AttachBezelSchemaToRootObject(gameObject)) return;
+            if (!AttachBezelSchemaToRootObject()) return;
 
             AttachBezelBehavior();
 
@@ -52,9 +73,7 @@ namespace Bezel.Bridge
                 bezelRoot.rootObject = JsonConvert.DeserializeObject<BezelObjects>(objectItem.ToString());
             }
             catch (Exception e) {
-                Debug.LogError("Fail to decode Bezel behavior json, likely schema mismatch from BezelSceneGraph.cs");
-                Debug.LogError("An error occurred: " + e.Message);
-
+                Debug.LogError("Fail to decode Bezel behavior json, likely schema mismatch from BezelSceneGraph.c. An error occurred: " + e.Message);
                 return false;
             }
 
@@ -90,7 +109,7 @@ namespace Bezel.Bridge
             }
         }
 
-        private static bool AttachBezelSchemaToRootObject(GameObject gameObject)
+        private static bool AttachBezelSchemaToRootObject()
         {
             if (bezelRoot.rootObject == null) return false;
             if (nodeObjects == null) return false;
@@ -117,7 +136,6 @@ namespace Bezel.Bridge
             return true;
         }
 
-        //Todo: Return status code (fail, success, ..etc)
         private static void AttachBezelBehavior()
         {
             if (bezelRoot.rootObject == null) return;
@@ -158,8 +176,6 @@ namespace Bezel.Bridge
 
                         foreach (var targetEntityId in bezelinteraction.Value.trigger.targetEntityIds) {
 
-                            // Add the gltf id as part of the trigger event for future reference.
-
                             // Add check to ensure dictionary look up is valid
                             int _targetEntity_gltf_Id;
 
@@ -185,8 +201,6 @@ namespace Bezel.Bridge
 
             foreach (var bezelobject in bezelRoot.rootObject.bezel_objects)
             {
-                //Transform nodeObject = nodeObjects[bezelobject.gltf_id];
-
                 if (bezelobject.type == "Text")
                 {
                     if (firstValid == 0)
@@ -207,6 +221,16 @@ namespace Bezel.Bridge
                 }
             }
         }
+
+        private static async Task<BezelFontMap> GenerateFontMap(string fontFamily, string fontWeight)
+        {
+            int fontWeightInt = FontManager.FontWeightStringToInt(fontWeight);
+
+            BezelFontMap fontMap = await FontManager.GenerateFontMapForDocument(fontFamily, fontWeightInt, true);
+
+            return fontMap;
+        }
+
     }
 }
 

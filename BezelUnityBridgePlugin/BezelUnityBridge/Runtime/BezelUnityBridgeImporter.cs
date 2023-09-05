@@ -56,6 +56,9 @@ namespace Bezel.Bridge.Editor.Settings
                 return;
             }
 
+            // Download text resources
+            BezelGLTFConstructor.PreparBezelTextResources(bezelExtras);
+
             // Import assets to show under Assets folder
             AssetDatabase.ImportAsset(downloadFilePath + ".json");
             AssetDatabase.ImportAsset(downloadFilePath + ".gltf");

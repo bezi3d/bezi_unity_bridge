@@ -54,9 +54,16 @@ namespace Bezel.Bridge.Editor.Fonts
     {
         private static BezelFontMap fontMap;
 
+        public static void Reset() {
+            fontMap = null;
+        }
+
         public static async Task<BezelFontMap> GenerateFontMapForDocument(string _fontFamily, int _fontWeight, bool enableGoogleFontsDownload)
         {
-            BezelFontMap fontMap = new BezelFontMap();
+            if (fontMap == null)
+            {
+                fontMap = new BezelFontMap();
+            }
 
             var allProjectFontAssets = AssetDatabase.FindAssets($"t:TMP_FontAsset").Select(guid => AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(AssetDatabase.GUIDToAssetPath(guid))).ToList();
 
@@ -93,8 +100,21 @@ namespace Bezel.Bridge.Editor.Fonts
             
             return fontMap;
         }
-        
-        
+
+        public static int FontWeightStringToInt(string fontWeight)
+        {
+            int fontWeightInt = 400;
+            int parsed;
+
+            if (int.TryParse(fontWeight, out parsed))
+            {
+                if (parsed <= 1000 && parsed >= 0)
+                {
+                    fontWeightInt = parsed;
+                }
+            }
+            return fontWeightInt;
+        }
         
         static string StripFontDetailsFromName(TMP_FontAsset fontAsset)
         {

@@ -69,10 +69,12 @@ namespace Bezel.Bridge
             };
 
             // Generate font map
-            BezelFontMap fontMap = await GenerateFontMap();
+            BezelFontMap fontMap = await GenerateFontMap(parameters.fontFamily, parameters.fontWeight);
+
+            int fontWeightInt = FontManager.FontWeightStringToInt(parameters.fontWeight);
 
             // Get font map
-            BezelFontMapEntry matchingFontMapping = fontMap.GetFontMapping(parameters.fontFamily, 400);
+            BezelFontMapEntry matchingFontMapping = fontMap.GetFontMapping(parameters.fontFamily, fontWeightInt);
 
             try
             {
@@ -91,12 +93,15 @@ namespace Bezel.Bridge
             return true;
         }
 
-        private async Task<BezelFontMap> GenerateFontMap()
+        private async Task<BezelFontMap> GenerateFontMap(string fontFamily, string fontWeight)
         {
-            BezelFontMap fontMap = await FontManager.GenerateFontMapForDocument(parameters.fontFamily, 400, true);
+            int fontWeightInt = FontManager.FontWeightStringToInt(fontWeight);
+
+            BezelFontMap fontMap = await FontManager.GenerateFontMapForDocument(fontFamily, fontWeightInt, true);
 
             return fontMap;
         }
+
 
         private Material GetEffectMaterialPreset(BezelFontMapEntry matchingFontMapping)
         {
