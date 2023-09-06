@@ -20,6 +20,8 @@ namespace Bezel.Bridge.Editor.Settings
 
         private bool devMode = false;
 
+        private bool showInHierarchy = false;
+
         public string getFileLink()
         {
             return FileLink;
@@ -64,6 +66,16 @@ namespace Bezel.Bridge.Editor.Settings
         public void setDevMode(bool newValue)
         {
             devMode = newValue;
+        }
+
+        public bool getShowInHierarchy()
+        {
+            return showInHierarchy;
+        }
+
+        public void setShowInHierarchy(bool newValue)
+        {
+            showInHierarchy = newValue;
         }
     }
 }

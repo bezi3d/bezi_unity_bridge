@@ -31,8 +31,9 @@ public class BezelUnityBridgeSettingsEditor : Editor
 
         GUIStyle disabledStyle = new GUIStyle(GUI.skin.button);
         disabledStyle.normal.textColor = Color.gray;
-        string constructBezelButton = "Bring Bezel Scene in Hierarchy";
-        string constructTextButton = "Import Text Assets";
+        string importButton = "Import Bezel file";
+        string importAndShowButton = "Import Bezel file to Hierarchy";
+        string constructBezelButton = "Bring Prefab to Hierarchy";
 
         // Title
         EditorGUILayout.BeginHorizontal();
@@ -68,10 +69,19 @@ public class BezelUnityBridgeSettingsEditor : Editor
         EditorGUILayout.Separator();
 
 #endif
+
+        // Setting
+        EditorGUILayout.LabelField("Import Options", EditorStyles.boldLabel);
+
+        settings.setShowInHierarchy(EditorGUILayout.Toggle("Show Prefab in Hierarchy", settings.getShowInHierarchy()));
+
+        EditorGUILayout.Separator();
+
         // Import
         EditorGUILayout.LabelField("Import and Optimize", EditorStyles.boldLabel);
 
-        if (GUILayout.Button("Import Bezel file"))
+        string importButtonText = settings.getShowInHierarchy() ? importAndShowButton : importButton;
+        if (GUILayout.Button(importButtonText))
         {
             BezelUnityBridgeImporter.ImportFromSyncKey();
         }
@@ -80,23 +90,12 @@ public class BezelUnityBridgeSettingsEditor : Editor
         {
             if (GUILayout.Button(constructBezelButton))
             {
-                BezelUnityBridgeImporter.ConstructBezelObject();
+                BezelUnityBridgeImporter.BringPrefabIntoHierarchy();
             }
         }
         else
         {
             GUILayout.Button(constructBezelButton, disabledStyle);
-        }
-
-        if (BezelUnityBridgeImporter.importedGameObject)
-        {
-            if (GUILayout.Button(constructTextButton))
-            {
-                BezelUnityBridgeImporter.ConstructText();
-            }
-        }
-        else {
-            GUILayout.Button(constructTextButton, disabledStyle);
         }
 
         if (BezelUnityBridgeImporter.importedGameObject == null)

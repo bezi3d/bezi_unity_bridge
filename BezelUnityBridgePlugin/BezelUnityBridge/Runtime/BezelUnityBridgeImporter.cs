@@ -33,6 +33,7 @@ namespace Bezel.Bridge.Editor.Settings
 
         public static GameObject importedGameObject;
 
+        public static GameObject bezelPrefabNew;
 
         [MenuItem("Bezel Bridge/Open Bezel Settings Menu")]
         static void SelectSettings()
@@ -57,7 +58,7 @@ namespace Bezel.Bridge.Editor.Settings
             }
 
             // Download text resources
-            BezelGLTFConstructor.PreparBezelTextResources(bezelExtras);
+            await BezelGLTFConstructor.PreparBezelTextResources(bezelExtras);
 
             // Import assets to show under Assets folder
             AssetDatabase.ImportAsset(downloadFilePath + ".json");
@@ -65,10 +66,17 @@ namespace Bezel.Bridge.Editor.Settings
 
             importedGameObject = (GameObject)AssetDatabase.LoadAssetAtPath(downloadFilePath + ".gltf", typeof(GameObject));
 
-            EditorUtility.DisplayDialog("Import Ready", "Click next button to visual " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab from " + s_BezelUnityBridgeSettings.getFileDirectory() + " into Hierarchy", "Okay");
+            CreatePrefabInFolder();
+
+            EditorUtility.DisplayDialog("Import Success", fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab is in the folder: " + s_BezelUnityBridgeSettings.getFileDirectory(), "Okay");
+
+            if (s_BezelUnityBridgeSettings.getShowInHierarchy())
+            {
+                BringPrefabIntoHierarchy();
+            }
         }
 
-        public static void ConstructBezelObject()
+        public static void CreatePrefabInFolder()
         {
             if (importedGameObject != null)
             {
@@ -79,16 +87,10 @@ namespace Bezel.Bridge.Editor.Settings
 
                 BezelGLTFConstructor.ObjectsContructor(bezelPrefabTemp, bezelExtras);
 
-                GameObject bezelPrefabModified = PrefabUtility.SaveAsPrefabAsset(bezelPrefabTemp, downloadFilePath + ".prefab");
-
-                GameObject bezelPrefabInHierarchy = PrefabUtility.InstantiatePrefab(bezelPrefabModified) as GameObject;
-
-                bezelPrefabInHierarchy.transform.position = new Vector3(0, 0, 0);
+                bezelPrefabNew = PrefabUtility.SaveAsPrefabAsset(bezelPrefabTemp, downloadFilePath + ".prefab");
 
                 // Remove temporary prefab
                 GameObject.DestroyImmediate(bezelPrefabTemp);
-
-                EditorUtility.DisplayDialog("Import Success", fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab is in Hierarchy", "Okay");
             }
             else
             {
@@ -96,11 +98,15 @@ namespace Bezel.Bridge.Editor.Settings
             }
         }
 
-        public static void ConstructText()
+        public static void BringPrefabIntoHierarchy()
         {
             if (importedGameObject != null)
             {
-                EditorUtility.DisplayDialog("Import Success", "Go to folder "+ s_BezelUnityBridgeSettings.getFileDirectory() + ", and drag the file " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), true) + " into Hierarchy", "Okay");
+                EditorUtility.DisplayDialog("Prefab in Hierarchy", "Click OKAY to bring " + fileNameFromSyncKey(s_BezelUnityBridgeSettings.getSyncKey(), false) + ".prefab from " + s_BezelUnityBridgeSettings.getFileDirectory() + " into Hierarchy", "OKAY");
+
+                GameObject bezelPrefabInHierarchy = PrefabUtility.InstantiatePrefab(bezelPrefabNew) as GameObject;
+
+                bezelPrefabInHierarchy.transform.position = new Vector3(0, 0, 0);
             }
             else
             {

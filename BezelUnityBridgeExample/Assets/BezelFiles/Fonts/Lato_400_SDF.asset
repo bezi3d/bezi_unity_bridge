@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!28 &-7383199740459693213
+--- !u!28 &-7924090328891323287
 Texture2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Name: Lato_400_SDF
   m_EditorClassIdentifier: 
   hashCode: -536674285
-  material: {fileID: 7904328205178369091}
+  material: {fileID: 5351971022356334320}
   materialHashCode: -2031988269
   m_Version: 1.1.0
   m_SourceFontFileGUID: edbd77794402e409d994fd2705e9f870
@@ -1936,7 +1936,7 @@ MonoBehaviour:
     m_GlyphIndex: 234
     m_Scale: 1
   m_AtlasTextures:
-  - {fileID: -7383199740459693213}
+  - {fileID: -7924090328891323287}
   m_AtlasTextureIndex: 0
   m_IsMultiAtlasTexturesEnabled: 1
   m_ClearDynamicDataOnBuild: 0
@@ -2745,7 +2745,7 @@ MonoBehaviour:
   boldSpacing: 7
   italicStyle: 35
   tabSize: 10
---- !u!21 &7904328205178369091
+--- !u!21 &5351971022356334320
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -2769,7 +2769,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: -7383199740459693213}
+        m_Texture: {fileID: -7924090328891323287}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
