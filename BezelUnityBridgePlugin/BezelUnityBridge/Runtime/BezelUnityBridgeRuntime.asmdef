@@ -2,8 +2,7 @@
     "name": "BezelBridgeRuntime",
     "rootNamespace": "",
     "references": [
-        "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:97539a97d24ee455d83cf03929c278c2"
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
