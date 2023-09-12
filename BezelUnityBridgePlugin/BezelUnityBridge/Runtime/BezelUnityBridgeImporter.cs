@@ -7,7 +7,8 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Text;
 using Bezel.Bridge.Editor.Utils;
-using static UnityEditor.Progress;
+using UnityEditor.PackageManager;
+using UnityEditor.PackageManager.Requests;
 
 #pragma warning disable CS4014 // webRequest.SendWebRequest() is not awaited intentionally
 
@@ -35,6 +36,10 @@ namespace Bezel.Bridge.Editor.Settings
 
         public static GameObject bezelPrefabNew;
 
+        private static bool glTFastReady = true;
+        private static ListRequest requestPackages;
+
+
         [MenuItem("Bezel Bridge/Open Bezel Settings Menu")]
         static void SelectSettings()
         {
@@ -50,13 +55,15 @@ namespace Bezel.Bridge.Editor.Settings
 
             bool result = await ImportBezelFile(s_BezelUnityBridgeSettings.FileLink);
 
+            if (!glTFastReady) return;
+
             //Trigger importing glTF after downloading 
             if (!result)
             {
                 EditorUtility.DisplayDialog("Import Error", "Encounter import issue.", "STOP");
                 return;
             }
-
+            
             // Download text resources
             await BezelGLTFConstructor.PreparBezelTextResources(bezelExtras);
 
@@ -65,6 +72,11 @@ namespace Bezel.Bridge.Editor.Settings
             AssetDatabase.ImportAsset(downloadFilePath + ".gltf");
 
             importedGameObject = (GameObject)AssetDatabase.LoadAssetAtPath(downloadFilePath + ".gltf", typeof(GameObject));
+            if (!importedGameObject)
+            {
+                EditorUtility.DisplayDialog("Import Error", "Make sure glTFast is installed.", "STOP");
+                return;
+            }
 
             CreatePrefabInFolder();
 
@@ -153,6 +165,24 @@ namespace Bezel.Bridge.Editor.Settings
                 }
             }
 
+            if (Application.isPlaying)
+            {
+                EditorUtility.DisplayDialog("Bezel Unity Bridge Importer", "Please exit play mode before importing", "OK");
+                return false;
+            }
+
+            // Check if TMP is installed
+            if (Shader.Find("TextMeshPro/Mobile/Distance Field") == null)
+            {
+                EditorUtility.DisplayDialog("Text Mesh Pro", "You need to install TestMeshPro Essentials. Use Window->Text Mesh Pro->Import TMP Essential Resources", "STOP");
+
+                return false;
+            }
+
+            // Check if glTFast is installed
+            requestPackages = UnityEditor.PackageManager.Client.List(true); // Set 'true' to show all versions
+            EditorApplication.update += CheckglTFastPackageStatus;
+
             s_PersonalAccessToken = PlayerPrefs.GetString(BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY);
 
             if (string.IsNullOrEmpty(s_PersonalAccessToken))
@@ -181,22 +211,7 @@ namespace Bezel.Bridge.Editor.Settings
                 Directory.CreateDirectory(GetFontMaterialPresetsFolder());
             }
 
-            if (Shader.Find("TextMeshPro/Mobile/Distance Field") == null)
-            {
-                EditorUtility.DisplayDialog("Text Mesh Pro", "You need to install TestMeshPro Essentials. Use Window->Text Mesh Pro->Import TMP Essential Resources", "STOP");
-                
-                return false;
-            }
-
-
-            if (Application.isPlaying)
-            {
-                EditorUtility.DisplayDialog("Bezel Unity Bridge Importer", "Please exit play mode before importing", "OK");
-                return false;
-            }
-
             return true;
-
         }
 
         private static async Task<bool> ImportBezelFile(string _fileLink)
@@ -304,7 +319,7 @@ namespace Bezel.Bridge.Editor.Settings
                 }
                 else
                 {
-                    Debug.LogError("File download failed. Error: " + webRequest.error);
+                    Debug.LogError("File download aborted. Reason: " + webRequest.error);
                     EditorUtility.ClearProgressBar();
                     return false;
                 }
@@ -347,7 +362,13 @@ namespace Bezel.Bridge.Editor.Settings
         {
             while(!webRequest.isDone)
             {
-                EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", "Downloading file to "+ s_BezelUnityBridgeSettings.getFileDirectory(), webRequest.downloadProgress);
+                if (EditorUtility.DisplayCancelableProgressBar("Importing Bezel File", "Downloading file to " + s_BezelUnityBridgeSettings.getFileDirectory(), webRequest.downloadProgress)) {
+                    webRequest.Abort();
+                }
+
+                if (!glTFastReady) {
+                    webRequest.Abort();
+                }
 
                 await Task.Yield();
             }
@@ -371,6 +392,65 @@ namespace Bezel.Bridge.Editor.Settings
             file_name = key.Substring(0, key.IndexOf("-")) + ((withExtension)?extension:"");
 
             return file_name;
+        }
+
+        private static void CheckglTFastPackageStatus()
+        {
+            if (requestPackages == null)
+            {
+                // Request was disposed; stop checking
+                EditorApplication.update -= CheckglTFastPackageStatus;
+                return;
+            }
+
+            if (requestPackages.IsCompleted)
+            {
+                if (requestPackages.Status == StatusCode.Success)
+                {
+                    bool isReady = false;
+                    foreach (var package in requestPackages.Result)
+                    {
+                        if (package.name == "com.atteneder.gltfast") // Replace with the package name you're checking
+                        {
+                            isReady = true;
+                            break;
+                        }
+                    }
+
+                    if (isReady) {
+                        glTFastReady = true;
+                    }
+                    else
+                    {
+                        glTFastReady = false; // Set glTFastReady globally to notify/abort the download process.
+
+                        EditorUtility.ClearProgressBar();
+
+                        bool openLink = EditorUtility.DisplayDialog("Have glTFast?", "Please install glTFast in. ", "Get glTFast", "Cancel");
+
+                        if (openLink) {
+                            string urlToOpen = "https://github.com/atteneder/glTFast#installing";
+                            Application.OpenURL(urlToOpen);
+                        }
+
+                        //Debug.Log("glTFast package is not installed.");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Error checking bezel dependency: " + requestPackages.Error.message);
+                }
+
+                // Dispose of the request and remove the event handler
+                requestPackages = null;
+                EditorApplication.update -= CheckglTFastPackageStatus;
+            }
+        }
+
+        private static void OnDestroy()
+        {
+            // Make sure to remove the event handler when the window is destroyed
+            EditorApplication.update -= CheckglTFastPackageStatus;
         }
     }
 
