@@ -26,6 +26,7 @@ namespace Bezel.Bridge.Editor.Settings
         // We'll cache the access token in editor Player prefs
         public const string BEZEL_PERSONAL_ACCESS_TOKEN_PREF_KEY = "BEZEL_PERSONAL_ACCESS_TOKEN";
         private const string BEZEL_SYNC_KEY_NAME = "SyncKey";
+        private const string BEZEL_SYNC_KEY_PREFIX = "bezel_";
         private const string BEZEL_ACCESS_TOKEN_NAME = "BezelToken";
 
         public static string s_PersonalAccessToken;
@@ -379,7 +380,7 @@ namespace Bezel.Bridge.Editor.Settings
             string _syncKey;
 
             var parts = fileLink.Split('/');
-            _syncKey = parts[parts.Length - 1];
+            _syncKey = BEZEL_SYNC_KEY_PREFIX + parts[parts.Length - 1];
 
             return _syncKey;
         }
