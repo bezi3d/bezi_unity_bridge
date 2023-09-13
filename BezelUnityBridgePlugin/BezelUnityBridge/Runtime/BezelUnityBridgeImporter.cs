@@ -175,7 +175,12 @@ namespace Bezel.Bridge.Editor.Settings
             // Check if TMP is installed
             if (Shader.Find("TextMeshPro/Mobile/Distance Field") == null)
             {
-                EditorUtility.DisplayDialog("Text Mesh Pro", "You need to install TestMeshPro Essentials. Use Window->Text Mesh Pro->Import TMP Essential Resources", "STOP");
+                bool tmpPopup = EditorUtility.DisplayDialog("Text Mesh Pro", "You need to install TestMeshPro Essentials. Use Window->Text Mesh Pro->Import TMP Essential Resources", "Install", "Cancel");
+
+                if (tmpPopup)
+                {
+                    EditorApplication.ExecuteMenuItem("Window/TextMeshPro/Import TMP Essential Resources");
+                }
 
                 return false;
             }
