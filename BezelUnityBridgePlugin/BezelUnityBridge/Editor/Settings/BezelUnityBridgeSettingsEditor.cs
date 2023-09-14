@@ -78,7 +78,7 @@ public class BezelUnityBridgeSettingsEditor : Editor
         EditorGUILayout.Separator();
 
         // Import
-        EditorGUILayout.LabelField("Import and Optimize", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Import", EditorStyles.boldLabel);
 
         string importButtonText = settings.getShowInHierarchy() ? importAndShowButton : importButton;
         if (GUILayout.Button(importButtonText))
