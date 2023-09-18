@@ -141,7 +141,6 @@ namespace Bezel.Bridge
             if (!ColorUtility.TryParseHtmlString(colorCode, out color))
             {
                 color = Color.white;
-                //Debug.Log("Invalid color code: " + colorCode);
             }
 
             return color;
