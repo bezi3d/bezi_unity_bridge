@@ -118,8 +118,7 @@ namespace Bezel.Bridge
 
             if (nodeObjects.Count != bObjects.Count)
             {
-                Debug.LogError("Export glTF object count ("+ nodeObjects.Count +") is not the same as the bezel schema count ("+ bObjects.Count + ")!");
-                return false;
+                //Debug.Log("Export glTF object count ("+ nodeObjects.Count +") is not the same as the bezel schema count ("+ bObjects.Count + ")!");
             }
             int id = 0;
             foreach (var bezelobject in bezelRoot.rootObject.bezel_objects)
@@ -131,6 +130,13 @@ namespace Bezel.Bridge
                     bezelIdsLookup.Add(bezelobject.id, bezelobject.gltf_id);
                 }
                 id++;
+
+                // Both DirectionalLight and SpotLight have an additional node, hence attach next node to the bezel object. This ensure a correct ordering for the next nodes.
+                if (bezelobject.type == "DirectionalLight" || bezelobject.type == "SpotLight")
+                {
+                    id++;
+                }
+
             }
 
             return true;
