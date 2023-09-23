@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using Color = UnityEngine.Color;
 using MathUtils = Bezel.Bridge.Editor.Utils.MathUtils;
-using Bezel.Bridge.Editor.Settings;
 
 namespace Bezel.Bridge.Editor.Fonts
 {

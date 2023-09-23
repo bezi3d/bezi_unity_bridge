@@ -5,7 +5,7 @@ using UnityEngine;
 using Bezel.Bridge.Editor.Fonts;
 using System.Threading.Tasks;
 
-namespace Bezel.Bridge
+namespace Bezel.Bridge.Editor
 {
     public static class BezelGLTFConstructor
     {
@@ -212,7 +212,9 @@ namespace Bezel.Bridge
                     if (firstValid == 0)
                     {
                         bezelobject.transform.gameObject.AddComponent<BezelText>();
-                        System.Threading.Tasks.Task<bool> task = bezelobject.transform.gameObject.GetComponent<BezelText>().SetTextParameters(bezelobject.parameters);
+
+                        System.Threading.Tasks.Task<bool> task = BezelTextConstructor.SetTextParameters(bezelobject.transform.gameObject, bezelobject.parameters);
+
                     }
 
                     // Remove custom text offset after alignment setting changed.

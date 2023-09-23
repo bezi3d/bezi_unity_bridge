@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Bezel.Bridge.Editor.Settings;
 using Bezel.Bridge.Editor.Utils;
 using Newtonsoft.Json;
 using TMPro;
@@ -59,7 +56,7 @@ namespace Bezel.Bridge.Editor.Fonts
         {
             // If already loaded, ignore
             if (s_FontDefinitions != null) return;
-            var fontDataFile = AssetDatabase.LoadAssetAtPath("Packages/com.bezel.unity/BezelUnityBridge/Runtime/Fonts/google-fonts.json", typeof(TextAsset)) as TextAsset;
+            var fontDataFile = AssetDatabase.LoadAssetAtPath("Packages/com.bezel.unity/BezelUnityBridge/Editor/Fonts/google-fonts.json", typeof(TextAsset)) as TextAsset;
             Debug.Log($"Font data loaded {fontDataFile.text.Length}");
             s_FontDefinitions = JsonConvert.DeserializeObject<Dictionary<string, GoogleFontDefinition>>(fontDataFile.text);
             Debug.Log($"Fonts found {s_FontDefinitions.Count}");
