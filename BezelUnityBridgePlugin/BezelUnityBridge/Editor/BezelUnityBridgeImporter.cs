@@ -12,7 +12,7 @@ using UnityEditor.PackageManager.Requests;
 
 #pragma warning disable CS4014 // webRequest.SendWebRequest() is not awaited intentionally
 
-namespace Bezel.Bridge.Editor.Settings
+namespace Bezel.Bridge.Editor
 {
     public static class BezelUnityBridgeImporter
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 using Bezel.Bridge.Editor.Fonts;
 using System.Threading.Tasks;
 
-namespace Bezel.Bridge
+namespace Bezel.Bridge.Editor
 {
     public static class BezelGLTFConstructor
     {

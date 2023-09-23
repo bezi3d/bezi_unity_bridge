@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Bezel.Bridge.Editor.Settings
+namespace Bezel.Bridge.Editor
 {
 	public class BezelUnityBridgeSettings : ScriptableObject
 	{

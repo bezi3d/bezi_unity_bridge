@@ -4,7 +4,7 @@ using Bezel.Bridge.Editor.Fonts;
 using System.Threading.Tasks;
 using System;
 
-namespace Bezel.Bridge
+namespace Bezel.Bridge.Editor
 {
     public static class BezelTextConstructor
     {
@@ -22,6 +22,8 @@ namespace Bezel.Bridge
             textObject.AddComponent<MeshRenderer>();
 
             textObject.AddComponent<TextMeshPro>();
+
+            if (!textObject.GetComponent<TextMeshPro>()) return false;
 
             TextMeshPro text = textObject.GetComponent<TextMeshPro>();
 

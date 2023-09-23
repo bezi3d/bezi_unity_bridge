@@ -2,8 +2,7 @@
 
 using UnityEngine;
 using UnityEditor;
-using Bezel.Bridge.Editor.Settings;
-using UnityEditor.Callbacks;
+using Bezel.Bridge.Editor;
 
 [CustomEditor(typeof(BezelUnityBridgeSettings))]
 public class BezelUnityBridgeSettingsEditor : Editor

@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Bezel.Bridge.Editor.Settings
+namespace Bezel.Bridge.Editor
 {
     public class BezelUnityBridgeSettingsProvider : SettingsProvider
     {
