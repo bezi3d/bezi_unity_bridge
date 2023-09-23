@@ -6,26 +6,24 @@ using System;
 
 namespace Bezel.Bridge
 {
-    public class BezelText : MonoBehaviour
+    public static class BezelTextConstructor
     {
         [SerializeField]
-        private Parameters parameters;
+        private static Parameters parameters;
 
-        private float magicScale1 = 0.135f; //Bezel to Unity font rescale
+        private static float magicScale1 = 0.135f; //Bezel to Unity font rescale
 
         private const float magicScale2 = 7.4f; //Bezel to Unity font rescale
 
-        public async Task<bool> SetTextParameters(Parameters parameters)
+        public static async Task<bool> SetTextParameters(GameObject textObject, Parameters parameters)
         {
-            //Debug.Log("Enter SetTextParameters");
+            textObject.GetComponent<BezelText>().parameters = parameters;
 
-            this.parameters = parameters;
+            textObject.AddComponent<MeshRenderer>();
 
-            this.gameObject.AddComponent<MeshRenderer>();
+            textObject.AddComponent<TextMeshPro>();
 
-            this.gameObject.AddComponent<TextMeshPro>();
-
-            TextMeshPro text = this.gameObject.GetComponent<TextMeshPro>();
+            TextMeshPro text = textObject.GetComponent<TextMeshPro>();
 
             text.text = parameters.text;
             text.fontSize = parameters.fontSize;
@@ -93,7 +91,7 @@ namespace Bezel.Bridge
             return true;
         }
 
-        private async Task<BezelFontMap> GenerateFontMap(string fontFamily, string fontWeight)
+        private static async Task<BezelFontMap> GenerateFontMap(string fontFamily, string fontWeight)
         {
             int fontWeightInt = FontManager.FontWeightStringToInt(fontWeight);
 
@@ -103,7 +101,7 @@ namespace Bezel.Bridge
         }
 
 
-        private Material GetEffectMaterialPreset(BezelFontMapEntry matchingFontMapping)
+        private static Material GetEffectMaterialPreset(BezelFontMapEntry matchingFontMapping)
         {
 
             var hasShadowEffect = false;
@@ -116,7 +114,7 @@ namespace Bezel.Bridge
                         hasShadowEffect, shadowColor, shadowDistance, hasOutlineColor, outlineColor, outlineWidth);
         }
 
-        private Vector2 getMaxHeightWidth(Parameters p)
+        private static Vector2 getMaxHeightWidth(Parameters p)
         {
             float maxWidth = 1.0f;
             float maxHeight = 1.0f;
@@ -135,7 +133,7 @@ namespace Bezel.Bridge
 
         }
 
-        private Color convertColorCode(string colorCode)
+        private static Color convertColorCode(string colorCode)
         {
             Color color = Color.white;
             if (!ColorUtility.TryParseHtmlString(colorCode, out color))

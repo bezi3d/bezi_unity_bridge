@@ -59,7 +59,7 @@ namespace Bezel.Bridge.Editor.Fonts
         {
             // If already loaded, ignore
             if (s_FontDefinitions != null) return;
-            var fontDataFile = AssetDatabase.LoadAssetAtPath("Packages/com.bezel.unity/BezelUnityBridge/Runtime/Fonts/google-fonts.json", typeof(TextAsset)) as TextAsset;
+            var fontDataFile = AssetDatabase.LoadAssetAtPath("Packages/com.bezel.unity/BezelUnityBridge/Editor/Fonts/google-fonts.json", typeof(TextAsset)) as TextAsset;
             Debug.Log($"Font data loaded {fontDataFile.text.Length}");
             s_FontDefinitions = JsonConvert.DeserializeObject<Dictionary<string, GoogleFontDefinition>>(fontDataFile.text);
             Debug.Log($"Fonts found {s_FontDefinitions.Count}");
