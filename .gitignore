@@ -73,7 +73,7 @@ crashlytics-build.properties
 
 # Mac folder meta files
 **/.DS_Store
-BezelUnityBridgeExample/.vscode/settings.json
+BeziUnityBridgeExample/.vscode/settings.json
 .vscode/settings.json
-BezelUnityBridgeExample/.vscode/extensions.json
-BezelUnityBridgeExample/.vscode/launch.json
+BeziUnityBridgeExample/.vscode/extensions.json
+BeziUnityBridgeExample/.vscode/launch.json
