@@ -54,7 +54,7 @@ namespace Bezi.Bridge
         }
 
         private void PrepareBaseState() {
-            List<float> _rotation = new List<float>();
+            BeziVector3 _rotation = new BeziVector3();
 
             // Todo: Setup rotations or other parameters as base state 
             // For example, _rotation = targetObjectTransform's rotation
