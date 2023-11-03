@@ -36,13 +36,34 @@ namespace Bezi.Bridge
     public class State
     {
         public string name;
-        public List<float> position;
-        public List<float> rotation;
+        public BeziVector3 position;
+        public BeziVector3 rotation;
 
-        public State(List<float> rotation, string name)
+        public State(BeziVector3 rotation, string name)
         {
             this.rotation = rotation;
             this.name = name;
+        }
+    }
+
+    [System.Serializable]
+    public class BeziVector3
+    {
+        public float x;
+        public float y;
+        public float z;
+
+        public BeziVector3()
+        {
+            this.x = 0;
+            this.y = 0;
+            this.z = 0;
+        }
+        public BeziVector3(float x, float y, float z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
     }
 
