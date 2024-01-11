@@ -416,7 +416,7 @@ namespace Bezi.Bridge.Editor
                     bool isReady = false;
                     foreach (var package in requestPackages.Result)
                     {
-                        if (package.name == "com.atteneder.gltfast") // Replace with the package name you're checking
+                        if (package.name == "com.atteneder.gltfast" || package.name == "com.unity.cloud.gltfast") // Replace with the package name you're checking
                         {
                             isReady = true;
                             break;
@@ -435,7 +435,7 @@ namespace Bezi.Bridge.Editor
                         bool openLink = EditorUtility.DisplayDialog("Have glTFast?", "Please install glTFast in. ", "Get glTFast", "Cancel");
 
                         if (openLink) {
-                            string urlToOpen = "https://github.com/atteneder/glTFast#installing";
+                            string urlToOpen = "https://github.com/atteneder/glTFast/blob/main/Documentation~/installation.md";
                             Application.OpenURL(urlToOpen);
                         }
 
